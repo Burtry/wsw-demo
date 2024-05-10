@@ -1,0 +1,161 @@
+<script setup>
+// import { ref } from "vue";
+// const categoryData = ref([
+//     { id: 1, name: "场地预约" },
+//     { id: 2, name: "器材租借" },
+//     { id: 4, name: "公告资讯" },
+//     { id: 5, name: "用户评价" },
+//     { id: 3, name: "用户中心" },
+//     { id: 6, name: "后台管理" },
+// ])
+
+
+
+</script>
+
+<template>
+    <header class='app-header'>
+        <div class="container">
+            <h1 class="logo">
+                <RouterLink to="/">万事屋</RouterLink>
+            </h1>
+            <ul class="app-header-nav">
+                <li class="home">
+                    <RouterLink :to="`/space`" active-class="active">场地预约</RouterLink>
+                </li>
+                <li class="home">
+                    <RouterLink :to="`/equipment`" active-class="active">器材租借</RouterLink>
+                </li>
+                <li class="home">
+                    <RouterLink :to="`/advertise`" active-class="active">公告资讯</RouterLink>
+                </li>
+                <li class="home">
+                    <RouterLink :to="`/assess`" active-class="active">用户评价</RouterLink>
+                </li>
+                <li class="home">
+                    <RouterLink :to="`/user/${1}`" active-class="active">用户中心</RouterLink>
+                </li>
+                <li class="home">
+                    <RouterLink :to="`/management`" active-class="active">后台管理</RouterLink>
+                </li>
+            </ul>
+            <div class="search">
+                <i class="iconfont icon-search"></i>
+                <input type="text" placeholder="搜一搜">
+            </div>
+
+        </div>
+    </header>
+</template>
+
+
+<style scoped lang='scss'>
+.active {
+    color: #27ba9b;
+    border-bottom: 1px solid #27ba9b;
+}
+
+.app-header {
+    background: #fff;
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo {
+        width: 200px;
+
+        a {
+            display: block;
+            display: block;
+            height: 132px;
+            width: 100%;
+            text-indent: -9999px;
+            margin-top: -40px;
+            background: url('@/assets/images/logo.png') no-repeat center 55px / contain;
+        }
+
+    }
+
+    .app-header-nav {
+        width: 820px;
+        display: flex;
+        padding-left: 40px;
+        position: relative;
+        z-index: 998;
+
+        li {
+            margin-right: 40px;
+            width: 80px;
+            text-align: center;
+
+            a {
+                font-size: 16px;
+                line-height: 32px;
+                height: 32px;
+                display: inline-block;
+
+                &:hover {
+                    color: #27ba9b;
+                    border-bottom: 1px solid #27ba9b;
+                }
+            }
+
+            .active {
+                color: #27ba9b;
+                border-bottom: 1px solid #27ba9b;
+            }
+        }
+    }
+
+    .search {
+        width: 170px;
+        height: 32px;
+        position: relative;
+        border-bottom: 1px solid #e7e7e7;
+        line-height: 32px;
+
+        .icon-search {
+            font-size: 18px;
+            margin-left: 5px;
+        }
+
+        input {
+            width: 140px;
+            padding-left: 5px;
+            color: #666;
+        }
+    }
+
+    .cart {
+        width: 50px;
+
+        .curr {
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            position: relative;
+            display: block;
+
+            .icon-cart {
+                font-size: 22px;
+            }
+
+            em {
+                font-style: normal;
+                position: absolute;
+                right: 0;
+                top: 0;
+                padding: 1px 6px;
+                line-height: 1;
+                background: #e26237;
+                color: #fff;
+                font-size: 12px;
+                border-radius: 10px;
+                font-family: Arial;
+            }
+        }
+    }
+}
+</style>
