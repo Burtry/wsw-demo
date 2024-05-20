@@ -1,13 +1,14 @@
 <script setup>
-// import { ref } from "vue";
-// const categoryData = ref([
-//     { id: 1, name: "场地预约" },
-//     { id: 2, name: "器材租借" },
-//     { id: 4, name: "公告资讯" },
-//     { id: 5, name: "用户评价" },
-//     { id: 3, name: "用户中心" },
-//     { id: 6, name: "后台管理" },
-// ])
+
+import { textAPI } from "@/api/text"
+
+
+const getText = async () => {
+    const res = await textAPI(1)
+    console.log(res)
+}
+
+getText()
 
 
 
@@ -33,9 +34,6 @@
                     <RouterLink :to="`/assess`" active-class="active">用户评价</RouterLink>
                 </li>
                 <li class="home">
-                    <RouterLink :to="`/user/${1}`" active-class="active">用户中心</RouterLink>
-                </li>
-                <li class="home">
                     <RouterLink :to="`/management`" active-class="active">后台管理</RouterLink>
                 </li>
             </ul>
@@ -51,8 +49,8 @@
 
 <style scoped lang='scss'>
 .active {
-    color: #27ba9b;
-    border-bottom: 1px solid #27ba9b;
+    color: #069;
+    border-bottom: 1px solid #069;
 }
 
 .app-header {
@@ -97,14 +95,14 @@
                 display: inline-block;
 
                 &:hover {
-                    color: #27ba9b;
-                    border-bottom: 1px solid #27ba9b;
+                    color: #069;
+                    border-bottom: 1px solid #069;
                 }
             }
 
             .active {
-                color: #27ba9b;
-                border-bottom: 1px solid #27ba9b;
+                color: #069;
+                border-bottom: 1px solid #069;
             }
         }
     }

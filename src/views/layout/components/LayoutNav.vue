@@ -1,3 +1,11 @@
+<script setup>
+import { useRouter } from "vue-router";
+const router = useRouter()
+const confirm = () => {
+    router.push("/login")
+};
+</script>
+
 <template>
     <nav class="app-topnav">
         <div class="container">
@@ -6,15 +14,16 @@
                     <p class="title">黑龙江工程学院昆仑旅游学院-万事屋</p>
                     <li><a href="javascript:;"><i class=" iconfont icon-user"></i>Burtry</a></li>
                     <li>
-                        <el-popconfirm title="确认退出吗?" confirm-button-text="确认" cancel-button-text="取消">
+                        <el-popconfirm @confirm="confirm" title="确认退出吗?" confirm-button-text="确认"
+                            cancel-button-text="取消">
                             <template #reference>
                                 <a href="javascript:;">退出登录</a>
                             </template>
                         </el-popconfirm>
                     </li>
-                    <li><a href="javascript:;">我的预约</a></li>
-                    <li><a href="javascript:;">我的租借</a></li>
-                    <li><a href="javascript:;">我的收藏</a></li>
+                    <li><a href="/management/user/reservation">我的预约</a></li>
+                    <li><a href="/management/user/rental">我的租借</a></li>
+                    <li><a href="/management/user/favorite">我的收藏</a></li>
                 </template>
                 <template v-else>
                     <p class="title">黑龙江工程学院昆仑旅游学院-万事屋</p>
@@ -59,7 +68,7 @@
                 }
 
                 &:hover {
-                    color: #27ba9b;
+                    color: #069;
                 }
             }
 

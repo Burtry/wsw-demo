@@ -26,9 +26,6 @@ const { y } = useScroll(window)
                     <RouterLink :to="`/assess`" active-class="active">用户评价</RouterLink>
                 </li>
                 <li class="home">
-                    <RouterLink :to="`/user/${1}`" active-class="active">用户中心</RouterLink>
-                </li>
-                <li class="home">
                     <RouterLink :to="`/management`" active-class="active">后台管理</RouterLink>
                 </li>
             </ul>
@@ -82,7 +79,7 @@ const { y } = useScroll(window)
         display: flex;
         text-align: center;
         padding-left: 40px;
-        border-left: 2px solid #27ba9b;
+        border-left: 2px solid #069;
 
         a {
             width: 38px;
@@ -91,7 +88,7 @@ const { y } = useScroll(window)
             line-height: 1;
 
             &:hover {
-                color: #27ba9b;
+                color: #069;
             }
         }
     }
@@ -116,14 +113,14 @@ const { y } = useScroll(window)
             display: inline-block;
 
             &:hover {
-                color: #27ba9b;
-                border-bottom: 1px solid #27ba9b;
+                color: #069;
+                border-bottom: 1px solid #069;
             }
         }
 
         .active {
-            color: #27ba9b;
-            border-bottom: 1px solid #27ba9b;
+            color: #069;
+            border-bottom: 1px solid #069;
         }
     }
 }

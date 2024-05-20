@@ -45,7 +45,7 @@ const spaceList = ref([
                         <img src="@/assets/images/404.png" :alt="item.name" />
                         <p class="name">{{ item.name }}</p>
                         <!-- TODO -->
-
+                        <!-- <el-button type="primary" class="button">租借</el-button> -->
                     </RouterLink>
                 </li>
             </ul>
@@ -55,6 +55,22 @@ const spaceList = ref([
 
 
 <style scoped lang='scss'>
+// .button {
+//     width: 150px;
+//     height: 40px;
+//     margin-top: 20px;
+//     font-size: 18px;
+//     //背景色
+//     background-color: #27ba9b;
+//     margin-left: 45px;
+//     //文字颜色
+//     color: #fff;
+//     //圆角
+//     border-radius: 20px;
+//     //边框
+//     border: none;
+// }
+
 .goods-list {
     display: flex;
     justify-content: space-between;
