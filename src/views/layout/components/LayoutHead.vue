@@ -1,14 +1,26 @@
 <script setup>
 
-import { textAPI } from "@/api/text"
+import { textPostAPI } from "@/api/text"
 
 
-const getText = async () => {
-    const res = await textAPI(1)
+/* const getText = async () => {
+    const params = {
+        id: 1,
+        name: 'burtry'
+    }
+    const res = await textAPI(params)
     console.log(res)
 }
 
-getText()
+getText() */
+
+const params = {
+    id: 1,
+    name: 'burtry'
+}
+const res = await textPostAPI(params)
+console.log(res);
+textPostAPI
 
 
 
