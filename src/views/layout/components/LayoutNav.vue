@@ -1,7 +1,10 @@
 <script setup>
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore()
 const router = useRouter()
 const confirm = () => {
+    userStore.removeUserInfo()
     router.push("/login")
 };
 </script>

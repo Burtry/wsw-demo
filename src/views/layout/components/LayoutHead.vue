@@ -1,26 +1,5 @@
 <script setup>
 
-/* import { textAPI } from "@/api/text"
-
-
-const getText = async () => {
-    const params = {
-        id: 1,
-        name: 'burtry'
-    }
-    const res = await textAPI(params)
-    console.log(res)
-}
-
-getText() */
-
-/* const params = {
-    id: 1,
-    name: 'burtry'
-}
-// 加上await Head不显示
-const res = textPostAPI(params)
-console.log(res); */
 
 </script>
 

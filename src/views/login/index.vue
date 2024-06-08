@@ -27,11 +27,16 @@ const doLogin = async () => {
     const { account, password } = form.value
     formRef.value.validate(async (valid) => {
         if (valid) {
+
+            // 1. 登录
             await userStore.getUserInfo(account, password);
-            console.log(userStore.userInfo);
-            ElMessage({ type: 'success', message: '登录成功' });
-            // 2. 跳转首页
-            router.replace({ path: '/' });
+            const code = userStore.userInfo.id  //如果id存在，说明存在用户，登录成功
+            if (code) {
+                console.log(userStore.userInfo);
+                ElMessage({ type: 'success', message: '登录成功' });
+                // 2. 跳转首页
+                router.replace({ path: '/' });
+            }
         }
     })
 
