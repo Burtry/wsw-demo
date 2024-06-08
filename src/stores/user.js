@@ -6,8 +6,8 @@ export const useUserStore = defineStore("user", () => {
     const userInfo = ref({})
 
     // 获取用户信息
-    const getUserInfo = async () => {
-        const res = await loginAPI("burtry001", "123456")
+    const getUserInfo = async (account, password) => {
+        const res = await loginAPI(account, password)
         userInfo.value = res.data
     }
 
