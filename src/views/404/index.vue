@@ -1,5 +1,5 @@
 <template>
     <div>
-        rental
+        404
     </div>
 </template>

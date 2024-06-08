@@ -1,5 +1,3 @@
 <template>
-    <div>
-        user management
-    </div>
+    <div>usermanagement</div>
 </template>

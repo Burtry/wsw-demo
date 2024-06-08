@@ -1,4 +1,21 @@
 <script setup>
+import { useUserStore } from '@/stores/user';
+const userStore = useUserStore();
+import { ElMessage } from 'element-plus'
+import 'element-plus/theme-chalk/el-message.css'
+import { useRouter } from "vue-router"
+const router = useRouter()
+
+const doLogin = async () => {
+    await userStore.getUserInfo();
+    console.log(userStore.userInfo);
+    // 1. 提示用户
+    if (userStore.userInfo) {
+        ElMessage({ type: 'success', message: '登录成功' });
+        // 2. 跳转首页
+        router.replace({ path: '/' });
+    }
+}
 
 </script>
 
@@ -36,7 +53,7 @@
                                     我已同意隐私条款和服务条款
                                 </el-checkbox>
                             </el-form-item>
-                            <el-button size="large" class="subBtn">点击登录</el-button>
+                            <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
                         </el-form>
                     </div>
                 </div>

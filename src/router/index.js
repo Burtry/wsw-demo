@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/home/index.vue'
 import LayoutView from '@/views/layout/index.vue'
-
+import InfoView from '@/views/management/components/InfoView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,6 +41,8 @@ const router = createRouter({
           path: 'assess',
           component: () => import('@/views/assess/index.vue')
         },
+
+
         {
           path: '/management',
           name: 'management',
@@ -48,7 +50,7 @@ const router = createRouter({
           children: [
             {
               path: '',
-              component: () => import('@/views/management/components/InfoView.vue')
+              component: InfoView
             },
             {
               path: 'usermanagement',
@@ -59,46 +61,14 @@ const router = createRouter({
               component: () => import('@/views/management/components/admin/SystemManagement.vue')
             },
             {
-              path: 'place',
-              children: [
-                {
-                  path: 'type',
-                  component: () => import('@/views/management/components/admin/TypeView.vue')
-                },
-                {
-                  path: 'info',
-                  component: () => import('@/views/management/components/admin/InfoView.vue')
-                },
-                {
-                  path: 'reserve',
-                  component: () => import('@/views/management/components/admin/ReserveView.vue')
-                },
-                {
-                  path: 'evaluate',
-                  component: () => import('@/views/management/components/admin/EvaluateView.vue')
-                }
-              ]
+              path: 'space',
+              component: () => import('@/views/management/components/admin/SpaceView.vue')
             },
+
             {
               path: 'equipment',
-              children: [
-                {
-                  path: 'type',
-                  component: () => import('@/views/management/components/admin/TypeView.vue')
-                },
-                {
-                  path: 'info',
-                  component: () => import('@/views/management/components/admin/InfoView.vue')
-                },
-                {
-                  path: 'reserve',
-                  component: () => import('@/views/management/components/admin/ReserveView.vue')
-                },
-                {
-                  path: 'evaluate',
-                  component: () => import('@/views/management/components/admin/EvaluateView.vue')
-                }
-              ]
+              component: () => import('@/views/management/components/admin/EquipmentView.vue')
+
             },
 
             // 用户路由
@@ -108,23 +78,28 @@ const router = createRouter({
             },
             {
               path: 'user/reservation',
-              component: () => import('@/views/management/components/ReserveView.vue')
+              component: () => import('@/views/management/components/user/ReserveView.vue')
             },
             {
               path: 'user/rental',
-              component: () => import('@/views/management/components/RentalView.vue')
+              component: () => import('@/views/management/components/user/RentalView.vue')
             },
             {
               path: 'user/favorite',
-              component: () => import('@/views/management/components/FavoriteView.vue')
+              component: () => import('@/views/management/components/user/FavoriteView.vue')
             },
             // 404界面
             {
               path: ':pathMatch(.*)*',
               name: 'NotFound',
-              component: () => import('@/views/management/components/404View.vue')
+              component: () => import('@/views/404/index.vue')
             }
           ]
+        },
+        {
+          path: ':pathMatch(.*)*',
+          name: 'NotFound',
+          component: () => import('@/views/404/index.vue')
         }
       ]
     },

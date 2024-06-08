@@ -1,9 +1,9 @@
 <script setup>
 
-import { textPostAPI } from "@/api/text"
+/* import { textAPI } from "@/api/text"
 
 
-/* const getText = async () => {
+const getText = async () => {
     const params = {
         id: 1,
         name: 'burtry'
@@ -14,15 +14,13 @@ import { textPostAPI } from "@/api/text"
 
 getText() */
 
-const params = {
+/* const params = {
     id: 1,
     name: 'burtry'
 }
-const res = await textPostAPI(params)
-console.log(res);
-textPostAPI
-
-
+// 加上await Head不显示
+const res = textPostAPI(params)
+console.log(res); */
 
 </script>
 
@@ -46,7 +44,7 @@ textPostAPI
                     <RouterLink :to="`/assess`" active-class="active">用户评价</RouterLink>
                 </li>
                 <li class="home">
-                    <RouterLink :to="`/management`" active-class="active">后台管理</RouterLink>
+                    <RouterLink :to="'/management'" active-class="active">后台管理</RouterLink>
                 </li>
             </ul>
             <div class="search">

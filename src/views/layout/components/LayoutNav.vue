@@ -12,7 +12,7 @@ const confirm = () => {
             <ul>
                 <template v-if="true">
                     <p class="title">黑龙江工程学院昆仑旅游学院-万事屋</p>
-                    <li><a href="javascript:;"><i class=" iconfont icon-user"></i>Burtry</a></li>
+                    <li><a href="/management/user"><i class=" iconfont icon-user"></i>Burtry</a></li>
                     <li>
                         <el-popconfirm @confirm="confirm" title="确认退出吗?" confirm-button-text="确认"
                             cancel-button-text="取消">
