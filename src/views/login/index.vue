@@ -72,7 +72,7 @@ const doLogin = async () => {
                                 <el-input v-model="form.account" />
                             </el-form-item>
                             <el-form-item label="密码" prop="password">
-                                <el-input v-model="form.password" />
+                                <el-input v-model="form.password" type="password" show-password />
                             </el-form-item>
                             <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
                         </el-form>
