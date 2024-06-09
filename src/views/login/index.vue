@@ -1,18 +1,19 @@
 <script setup>
 import { ref } from "vue"
 import { useUserStore } from '@/stores/user';
-const userStore = useUserStore();
 import { ElMessage } from 'element-plus'
 import 'element-plus/theme-chalk/el-message.css'
 import { useRouter } from "vue-router"
-const router = useRouter()
+import { registerAPI } from "@/api/user";
 
+const userStore = useUserStore();
+const router = useRouter()
+const formRef = ref(null)
 const form = ref({
     account: '',
     password: '',
     agree: true
 })
-const formRef = ref(null)
 
 const rules = {
     account: [
@@ -39,6 +40,66 @@ const doLogin = async () => {
             }
         }
     })
+}
+//注册
+const doRegister = ref(false)
+const doRegisterFun = async () => {
+    if (registerForm.value.password !== registerForm.value.checkPass) {
+        ElMessage({ type: 'error', message: '两次密码不一致' })
+        return
+    }
+    //表单验证
+    try {
+        await ruleFormRef.value.validate()
+    } catch (error) {
+        ElMessage({ type: 'error', message: '请填写正确的信息' })
+        return
+    }
+    doRegister.value = false
+
+
+    //向后端发送注册请求
+    const res = await registerAPI(registerForm.value)
+    if (res.code === 1) {
+        ElMessage({ type: 'success', message: '注册成功' })
+    }
+    //清空表单
+    registerForm.value = {}
+
+}
+const ruleFormRef = ref()
+const registerForm = ref({
+    account: '',
+    password: '',
+    checkPass: '',
+    username: '',
+    sex: '',
+    phone: '',
+    email: '',
+    address: '',
+    detailAddress: ''
+})
+
+const registerRules = {
+    account: [
+        { required: true, message: '请输入正确的账号', trigger: 'blur' },
+        { min: 3, max: 10, message: '账号长度在 3 到 10 个字符', trigger: 'blur' },
+    ],
+    password: [
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 6, max: 15, message: '密码长度在 6 到 15 个字符', trigger: 'blur' },
+    ],
+    checkPass: [
+        { required: true, message: '请再次输入密码', trigger: 'blur' },
+
+    ],
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { min: 11, max: 11, message: '手机号长度为11位', trigger: 'blur' },
+    ],
+    email: [
+        { required: true, message: '请输入邮箱', trigger: 'blur' },
+    ],
 
 }
 
@@ -74,12 +135,66 @@ const doLogin = async () => {
                             <el-form-item label="密码" prop="password">
                                 <el-input v-model="form.password" type="password" show-password />
                             </el-form-item>
-                            <el-button size="large" class="subBtn" @click="doLogin">点击登录</el-button>
+                            <el-button size="large" class="subBtn" @click="doLogin">登录</el-button>
+                            <div>
+                                <el-button size="small" class="register" @click="doRegister = true">注册</el-button>
+                            </div>
                         </el-form>
                     </div>
                 </div>
             </div>
         </section>
+
+        <!-- 注册表单 -->
+        <el-dialog v-model="doRegister" title="注册账号" width="500" :before-close="handleClose">
+
+            <!-- 表单内容 -->
+
+            <el-form ref="ruleFormRef" style="max-width: 600px" :model="registerForm" :rules="registerRules"
+                label-width="auto" class="demo-ruleForm" :size="formSize" status-icon>
+                <el-form-item label="账号" prop="account">
+                    <el-input v-model="registerForm.account" />
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="registerForm.password" type="password" show-password />
+                </el-form-item>
+                <el-form-item label="确认密码" prop="checkPass">
+                    <el-input v-model="registerForm.checkPass" type="password" show-password />
+                </el-form-item>
+                <el-form-item label="用户名(昵称)" prop="username">
+                    <el-input v-model="registerForm.username" />
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-radio-group v-model="registerForm.sex" size="large" class="ml-4">
+                        <el-radio value="男" size="large">男</el-radio>
+                        <el-radio value="女" size="large">女</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="registerForm.phone" />
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="registerForm.email" />
+                </el-form-item>
+                <el-form-item label="现居地">
+                    <el-input v-model="registerForm.address" />
+                </el-form-item>
+                <el-form-item label="详细地址">
+                    <el-input v-model="registerForm.detailAddress" />
+                </el-form-item>
+
+
+            </el-form>
+
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="doRegister = false; registerForm = {}">取消</el-button>
+                    <el-button type="primary" @click="doRegisterFun">
+                        注册
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
 
         <footer class="login-footer">
             <div class="container">
@@ -324,5 +439,12 @@ const doLogin = async () => {
     background: #069;
     width: 100%;
     color: #fff;
+}
+
+.register {
+    //元素右对齐
+    margin-left: 292px;
+    margin-top: 10px;
+    color: #069;
 }
 </style>

@@ -9,4 +9,13 @@ export const loginAPI = (account, password) => {
             password: password
         }
     })
+
+}
+
+export const registerAPI = (params) => {
+    return instance({
+        url: '/register',
+        method: 'POST',
+        data: params
+    })
 }
