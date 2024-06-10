@@ -6,7 +6,7 @@
 
         <el-descriptions class="margin-top" title="我的信息" :column="2" size="large" border>
             <template #extra>
-                <el-button type="primary">修改信息</el-button>
+                <el-button type="primary" @click="doEdit = true">修改信息</el-button>
             </template>
             <el-descriptions-item>
                 <template #label>
@@ -99,6 +99,49 @@
 
         </el-descriptions>
 
+        <!-- 修改信息 -->
+        <el-dialog v-model="doEdit" title="修改信息" width="500" :before-close="handleClose">
+
+            <!-- 表单内容 -->
+
+            <el-form ref="ruleFormRef" style="max-width: 600px" :model="newUserInfoForm" :rules="userInfoRules"
+                label-width="auto" class="demo-ruleForm" :size="formSize" status-icon>
+                <el-form-item label="用户名(昵称)" prop="username">
+                    <el-input v-model="newUserInfoForm.username" />
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-radio-group v-model="newUserInfoForm.sex" size="large" class="ml-4">
+                        <el-radio value="男" size="large">男</el-radio>
+                        <el-radio value="女" size="large">女</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="newUserInfoForm.phone" />
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="newUserInfoForm.email" />
+                </el-form-item>
+                <el-form-item label="现居地" prop="address">
+                    <el-input v-model="newUserInfoForm.address" />
+                </el-form-item>
+                <el-form-item label="详细地址" prop="detailAddress">
+                    <el-input v-model="newUserInfoForm.detailAddress" />
+                </el-form-item>
+
+
+            </el-form>
+
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="doRegister = false; registerForm = {}">取消</el-button>
+                    <el-button type="primary" @click="updateUserInfo">
+                        注册
+                    </el-button>
+                </div>
+            </template>
+        </el-dialog>
+
+
         <div class="like-container">
             <div class="home-panel">
                 <div class="header">
@@ -128,11 +171,80 @@ import {
 } from '@element-plus/icons-vue'
 import { useUserStore } from "@/stores/user.js";
 import GoodsItem from '@/views/home/GoodsItem.vue'
+import { updateUserInfoAPI } from '@/api/user.js'
+import { ElMessage } from 'element-plus';
 
 const userStore = useUserStore();
 const userRole = computed(() => {
     return userStore.userInfo.role === 0 ? '管理员' : '普通用户';
 });
+
+const doEdit = ref(false)
+const ruleFormRef = ref()
+
+const newUserInfoForm = ref({
+    id: userStore.userInfo.id,
+    username: '',
+    sex: '',
+    phone: '',
+    email: '',
+    address: '',
+    detailAddress: ''
+})
+
+const userInfoRules = {
+    username: [
+        { required: true, message: '请输入用户名', trigger: 'blur' },
+    ],
+    phone: [
+        { required: true, message: '请输入手机号', trigger: 'blur' },
+        { min: 11, max: 11, message: '手机号长度为11位', trigger: 'blur' },
+    ],
+    email: [
+        { required: true, message: '请输入邮箱', trigger: 'blur' },
+        { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] },
+    ],
+    address: [
+        { required: true, message: '请输入地址', trigger: 'blur' },
+    ],
+    detailAddress: [
+        { required: true, message: '请输入详细地址', trigger: 'blur' },
+    ],
+
+}
+
+const updateUserInfo = async () => {
+    // 表单校验
+    ruleFormRef.value.validate((valid) => {
+        if (!valid) {
+            ElMessage({ type: 'error', message: '请填写正确的信息' })
+            return
+        }
+
+        updateUserInfoAPI(newUserInfoForm.value).then(res => {
+            if (res.code === 1) {
+                ElMessage({ type: 'success', message: '修改成功' })
+                //将用户新的信息直接存储到Store中
+                userStore.userInfo.username = newUserInfoForm.value.username;
+                userStore.userInfo.sex = newUserInfoForm.value.sex;
+                userStore.userInfo.phone = newUserInfoForm.value.phone;
+                userStore.userInfo.email = newUserInfoForm.value.email;
+                userStore.userInfo.address = newUserInfoForm.value.address;
+                userStore.userInfo.detailAddress = newUserInfoForm.value.detailAddress;
+
+                //将表单内容置空
+                newUserInfoForm.value = {}
+                //修改成功后，关闭修改信息弹窗
+                doEdit.value = false;
+            } else {
+                ElMessage({ type: 'error', message: '修改失败' })
+            }
+        });
+    });
+
+
+
+}
 
 
 const equipmentList = ref([

@@ -19,3 +19,11 @@ export const registerAPI = (params) => {
         data: params
     })
 }
+
+export const updateUserInfoAPI = (params) => {
+    return instance({
+        url: '/user',
+        method: 'put',
+        data: params
+    })
+}
