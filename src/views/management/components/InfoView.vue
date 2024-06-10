@@ -23,6 +23,17 @@
                 <template #label>
                     <div class="cell-item">
                         <el-icon :style="iconStyle">
+                            <user />
+                        </el-icon>
+                        账号
+                    </div>
+                </template>
+                {{ userStore.userInfo.account }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+                <template #label>
+                    <div class="cell-item">
+                        <el-icon :style="iconStyle">
                             <office-building />
                         </el-icon>
                         性别

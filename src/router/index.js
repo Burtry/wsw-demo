@@ -70,6 +70,15 @@ const router = createRouter({
               component: () => import('@/views/management/components/admin/EquipmentView.vue')
 
             },
+            {
+              path: 'rental',
+              component: () => import('@/views/management/components/admin/RentalManagementView.vue')
+            },
+            {
+              path: 'reserve',
+              component: () => import('@/views/management/components/admin/ReserveManagementView.vue')
+            },
+
 
             // 用户路由
             {

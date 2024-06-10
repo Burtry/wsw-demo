@@ -33,7 +33,6 @@ const doLogin = async () => {
             await userStore.getUserInfo(account, password);
             const code = userStore.userInfo.id  //如果id存在，说明存在用户，登录成功
             if (code) {
-                console.log(userStore.userInfo);
                 ElMessage({ type: 'success', message: '登录成功' });
                 // 2. 跳转首页
                 router.replace({ path: '/' });

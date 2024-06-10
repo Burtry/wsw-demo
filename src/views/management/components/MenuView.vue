@@ -1,7 +1,7 @@
 <template>
 
     <!-- 管理员界面 -->
-    <el-menu :default-active="currentRoute" class="el-menu-vertical-demo" router="true" v-if="false">
+    <el-menu :default-active="currentRoute" class="el-menu-vertical-demo" router="true" v-if=isAdmin>
         <el-menu-item index="/management">
             <el-icon>
                 <user />
@@ -22,6 +22,21 @@
             </el-icon>
             <span>器材管理</span>
         </el-menu-item>
+
+        <el-menu-item index="/management/reserve">
+            <el-icon>
+                <Location />
+            </el-icon>
+            <span>预约管理</span>
+        </el-menu-item>
+
+        <el-menu-item index="/management/rental">
+            <el-icon>
+                <Location />
+            </el-icon>
+            <span>租借管理</span>
+        </el-menu-item>
+
 
         <el-menu-item index="/management/usermanagement">
             <el-icon>
@@ -58,6 +73,9 @@
 
 <script setup>
 import { useRoute } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+const userStore = useUserStore()
+import { ref } from "vue";
 const route = useRoute();
 import {
     User,
@@ -66,6 +84,11 @@ import {
     Setting,
 } from '@element-plus/icons-vue'
 const currentRoute = route.path;
+
+const isAdmin = ref(false)
+userStore.userInfo.role === 0 ?
+    isAdmin.value = true :
+    isAdmin.value = false
 
 
 </script>
@@ -76,6 +99,6 @@ const currentRoute = route.path;
 }
 
 .el-divider-admin {
-    height: 540px;
+    height: 428px;
 }
 </style>
