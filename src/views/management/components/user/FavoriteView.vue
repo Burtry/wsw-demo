@@ -1,33 +1,61 @@
 <template>
-    <el-table :data="tableData" stripe style="width: 100%">
-        <el-table-column prop="date" label="Date" width="180" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" />
-    </el-table>
+
+
+    <div class="goods-list">
+        <GoodsItem v-for="item in equipmentList" :key="item.id" :goods="item" :category="'equipment'" :id="item.id">
+        </GoodsItem>
+    </div>
+
+
 </template>
 
 
 <script setup>
-const tableData = [
+import { ref } from 'vue';
+import GoodsItem from '@/views/home/GoodsItem.vue';
+const equipmentList = ref([
     {
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        id: '1',
+        name: '器材',
+        picture: '404.png'
     },
     {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        id: '2',
+        name: '器材',
+        picture: '404.png'
     },
     {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        id: '3',
+        name: '器材',
+        picture: '404.png'
     },
     {
-        date: '2016-05-01',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
+        id: '4',
+        name: '器材',
+        picture: '404.png'
     },
-]
+    {
+        id: '5',
+        name: '器材',
+        picture: '404.png'
+    },
+    {
+        id: '6',
+        name: '器材',
+        picture: '404.png'
+    },
+    {
+        id: '7',
+        name: '器材',
+        picture: '404.png'
+    }
+])
 </script>
+
+<style scoped>
+.goods-list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 10px;
+}
+</style>
