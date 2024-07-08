@@ -1,11 +1,11 @@
 <template>
 
-    <div class="space-manage">
-        <h1>场地管理</h1>
-        <el-button type="primary" size="large" @click="addSpace = true">
-            新增场地
-        </el-button>
-    </div>
+
+    <h1 class="title">场地管理</h1>
+    <el-button type="primary" class="btn" size="large" @click="addSpace = true">
+        新增场地
+    </el-button>
+
 
     <el-table :data="tableData" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="ID" width="100" />
@@ -227,13 +227,18 @@ const doUpdateSpace = () => {
 </script>
 
 <style lang="scss">
-.space-manage {
-    background-color: #fff;
-
+.title {
+    color: #606266;
+    font-size: 34px;
+    font-weight: bold;
+    margin-bottom: -20px;
 }
 
-.space-manage h1 {
-    font-size: 30px;
-    color: #606266;
+.btn {
+    //按钮元素右对齐
+    float: right;
+    margin-top: -20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
 }
 </style>
