@@ -1,7 +1,7 @@
 <template>
 
 
-    <h1 class="title">场地管理</h1>
+    <h1 class="spaceTitle">场地管理</h1>
     <el-button type="primary" class="btn" size="large" @click="addSpace = true">
         新增场地
     </el-button>
@@ -118,6 +118,11 @@
         </template>
     </el-dialog>
 
+    <!-- 分页条 -->
+    <el-pagination v-model:current-page="pageData.pageNum" v-model:page-size="pageData.pageSize"
+        :page-sizes="[5, 10, 15, 20]" size="small" background layout="sizes, prev, pager, next, jumper,total, "
+        :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
+
 
 </template>
 
@@ -134,6 +139,23 @@ const tableData = ref([])
 const addSpace = ref(false)
 const rowInfo = ref({})
 const updateInfo = ref({})
+//分页数据模型
+const pageData = ref({
+    pageNum: 1, //默认第一页
+    pageSize: 5,    //每页十条数据
+    total: 0,
+    sortBy: "",
+})
+
+
+const spaceInfo = ref({
+
+    spaceName: '',
+    spaceType: '',
+    location: '',
+    price: 0,
+    description: '',
+})
 const spaceRules =
     ref({
         spaceName: [
@@ -157,17 +179,34 @@ const spaceRules =
             { required: false, message: '请输入详细描述', trigger: 'blur' },
         ]
     })
-getSpaceAPI().then(res => {
-    tableData.value = res.data
-})
-const spaceInfo = ref({
 
-    spaceName: '',
-    spaceType: '',
-    location: '',
-    price: 0,
-    description: '',
-})
+const OnCurrentChange = (pageNum) => {
+    pageData.value.pageNum = pageNum;
+
+    getSpace();
+
+}
+const OnSizeChange = (pageSize) => {
+    pageData.value.pageSize = pageSize;
+    getSpace();
+}
+
+
+const getSpace = () => {
+    getSpaceAPI(pageData.value).then(res => {
+        tableData.value = res.data.list.map(item => ({
+            ...item,
+            price: item.price + "元/天",//将价格进行转换
+        }));
+        pageData.value.total = res.data.total;
+
+    })
+}
+getSpace();
+
+
+
+
 const doAddSpace = () => {
     //在校验通过后进行新增操作
     ruleFormRef.value.validate((valid) => {
@@ -227,7 +266,7 @@ const doUpdateSpace = () => {
 </script>
 
 <style lang="scss">
-.title {
+.spaceTitle {
     color: #606266;
     font-size: 34px;
     font-weight: bold;

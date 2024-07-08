@@ -2,10 +2,11 @@ import instance from '@/utils/http'
 
 
 //获取器材信息
-export function getEquipmentAPI() {
+export function getEquipmentAPI(params) {
     return instance({
         url: '/equipment',
-        method: 'get'
+        method: 'get',
+        params: params
     })
 }
 

@@ -1,11 +1,12 @@
 import instance from "@/utils/http"
 
 //获取场地信息
-export function getSpaceAPI() {
+export function getSpaceAPI(params) {
     return instance(
         {
             url: "/space",
             method: "get",
+            params: params
         }
     )
 }

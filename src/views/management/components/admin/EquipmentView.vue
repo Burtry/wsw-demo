@@ -1,7 +1,7 @@
 <template>
 
 
-    <h1 class="title">器材管理</h1>
+    <h1 class="EquipmentTitle">器材管理</h1>
     <el-button type="primary" class="btn" size="large" @click="addEquipment = true">
         新增器材
     </el-button>
@@ -27,6 +27,7 @@
                 </el-button>
             </template>
         </el-table-column>
+
 
 
 
@@ -120,6 +121,12 @@
     </el-dialog>
 
 
+    <!-- 分页条 -->
+    <el-pagination v-model:current-page="pageData.pageNum" v-model:page-size="pageData.pageSize"
+        :page-sizes="[5, 10, 15, 20]" size="small" background layout="sizes, prev, pager, next, jumper,total, "
+        :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
+
+
 </template>
 
 
@@ -131,7 +138,7 @@ const addEquipment = ref(false);
 const deleteEquipment = ref(false);
 const updateEquipment = ref(false);
 const rowInfo = ref({})
-console.log(); const equipmentInfo = ref({
+const equipmentInfo = ref({
 
     equipmentName: "",
     equipmentType: "",
@@ -140,6 +147,14 @@ console.log(); const equipmentInfo = ref({
     status: 0,
     description: "",
 
+})
+
+//分页数据模型
+const pageData = ref({
+    pageNum: 1, //默认第一页
+    pageSize: 5,    //每页十条数据
+    total: 0,
+    sortBy: "",
 })
 const updateInfo = ref({})
 
@@ -168,14 +183,25 @@ const equipmentRules = ref({
 })
 
 
+const OnCurrentChange = (pageNum) => {
+    pageData.value.pageNum = pageNum;
+    getEquipment();
+}
+const OnSizeChange = (pageSize) => {
+    pageData.value.pageSize = pageSize;
+    getEquipment();
+}
+
+
 const equipmentList = ref([]);
 const getEquipment = () => {
-    getEquipmentAPI().then(res => {
-        equipmentList.value = res.data.map(item => ({
+    getEquipmentAPI(pageData.value).then(res => {
+        equipmentList.value = res.data.list.map(item => ({
             ...item,
             status: item.status === "0" ? "已租借" : "未租借",//将状态进行转换
             rentalPrice: item.rentalPrice + "元/天",//将价格进行转换
         }));
+        pageData.value.total = res.data.total;
     });
 }
 getEquipment();
@@ -244,7 +270,7 @@ const doUpdateEquipment = () => {
 </script>
 
 <style lang="scss">
-.title {
+.EquipmentTitle {
     color: #606266;
     font-size: 34px;
     font-weight: bold;
@@ -253,9 +279,19 @@ const doUpdateEquipment = () => {
 
 .btn {
     //按钮元素右对齐
-    float: right;
+
     margin-top: -20px;
     margin-right: 20px;
     margin-bottom: 20px;
+}
+
+.page {
+
+
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 100%;
 }
 </style>
