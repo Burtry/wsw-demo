@@ -7,6 +7,7 @@
     </el-button>
 
 
+
     <el-table :data="tableData" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="ID" width="100" />
         <el-table-column prop="spaceName" label="场地名称" width="180" />
@@ -142,7 +143,7 @@ const updateInfo = ref({})
 //分页数据模型
 const pageData = ref({
     pageNum: 1, //默认第一页
-    pageSize: 5,    //每页十条数据
+    pageSize: 5,    //每页五条数据
     total: 0,
     sortBy: "",
 })
@@ -279,5 +280,13 @@ const doUpdateSpace = () => {
     margin-top: -20px;
     margin-right: 20px;
     margin-bottom: 20px;
+}
+
+.page {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 100%;
 }
 </style>

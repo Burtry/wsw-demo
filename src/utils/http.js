@@ -26,10 +26,11 @@ instance.interceptors.request.use(config => {
 //响应拦截器
 instance.interceptors.response.use(res => res.data, e => {
     const userStore = useUserStore()
-    ElMessage({ message: e.response.data.msg, type: 'error' })
+    // ElMessage({ message: e.response.data.msg, type: 'error' })
     //401处理
     if (e.response.status === 401) {
         userStore.removeUserInfo()
+        ElMessage({ type: 'error', message: '登录过期，请重新登录' });
         router.push('/login')
     }
     return Promise.reject(e)

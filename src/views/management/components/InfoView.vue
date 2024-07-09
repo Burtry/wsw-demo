@@ -135,7 +135,7 @@
                 <div class="dialog-footer">
                     <el-button @click="doRegister = false; registerForm = {}">取消</el-button>
                     <el-button type="primary" @click="updateUserInfo">
-                        注册
+                        修改
                     </el-button>
                 </div>
             </template>

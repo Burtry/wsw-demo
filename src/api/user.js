@@ -27,3 +27,32 @@ export const updateUserInfoAPI = (params) => {
         data: params
     })
 }
+
+//分页获取用户信息
+export function getUserInfoOfPageAPI(params) {
+    return instance({
+        url: "/usermanagement",
+        method: "get",
+        params: params
+    })
+}
+
+//删除用户
+export function deleteByIdAPI(id) {
+    return instance({
+        url: "/usermanagement",
+        method: 'delete',
+        params: { id }
+
+    })
+}
+
+//重置用户密码
+export function resetPasswordAPI(id) {
+    return instance({
+        url: "/usermanagement",
+        method: 'put',
+        params: { id }
+
+    })
+}
