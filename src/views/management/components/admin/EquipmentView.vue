@@ -43,7 +43,7 @@
     </el-dialog>
 
     <!-- 新增器材 -->
-    <el-dialog v-model="addEquipment" title="新增器材" width="500" :before-close="handleClose">
+    <el-dialog v-model="addEquipment" title="新增器材" width="500" :before-close="addEquipmentClose">
 
         <!-- 表单内容 -->
 
@@ -68,7 +68,7 @@
 
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="addEquipment = false">取消</el-button>
+                <el-button @click="addEquipmentClose">取消</el-button>
                 <el-button type="primary" @click="doAddEquipment">
                     新增器材
                 </el-button>
@@ -89,12 +89,6 @@
             <el-form-item label="器材类型" prop="equipmentType">
                 <el-input v-model="updateInfo.equipmentType" />
             </el-form-item>
-            <el-form-item label="器材状态">
-                <el-select v-model="updateInfo.status">
-                    <el-option label="未租借" value="0" />
-                    <el-option label="已租借" value="1" />
-                </el-select>
-            </el-form-item>
             <el-form-item label="价格" prop="rentalPrice">
                 <el-input v-model="updateInfo.rentalPrice" />
             </el-form-item>
@@ -108,7 +102,7 @@
 
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="updateEquipment = false">取消</el-button>
+                <el-button @click="updateEquipment = false; updateInfo = {}">取消</el-button>
                 <el-button type="primary" @click="doUpdateEquipment">
                     更新器材
                 </el-button>
@@ -140,7 +134,7 @@ const equipmentInfo = ref({
     equipmentType: "",
     rentalPrice: "",
     //默认未租借
-    status: 0,
+    status: "0",
     description: "",
 
 })
@@ -178,6 +172,19 @@ const equipmentRules = ref({
     ]
 })
 
+const addEquipmentClose = () => {
+
+    equipmentInfo.value = {
+        equipmentName: "",
+        equipmentType: "",
+        rentalPrice: "",
+        //默认未租借
+        status: "0",
+        description: "",
+    }
+
+    addEquipment.value = false;
+}
 
 const OnCurrentChange = (pageNum) => {
     pageData.value.pageNum = pageNum;
@@ -194,7 +201,7 @@ const getEquipment = () => {
     getEquipmentAPI(pageData.value).then(res => {
         equipmentList.value = res.data.list.map(item => ({
             ...item,
-            status: item.status === "0" ? "已租借" : "未租借",//将状态进行转换
+            status: item.status === "1" ? "已租借" : "未租借",//将状态进行转换
             rentalPrice: item.rentalPrice + "元/天",//将价格进行转换
         }));
         pageData.value.total = res.data.total;
@@ -217,7 +224,7 @@ const doAddEquipment = () => {
                         equipmentType: "",
                         rentalPrice: "",
                         //默认未租借
-                        status: 0,
+                        status: "0",
                         description: "",
                     }
                 } else {

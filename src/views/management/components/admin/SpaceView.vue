@@ -47,7 +47,7 @@
     </el-dialog>
 
     <!-- 新增场地 -->
-    <el-dialog v-model="addSpace" title="新增场地" width="500" :before-close="handleClose">
+    <el-dialog v-model="addSpace" title="新增场地" width="500" :before-close="addSpaceClose">
 
         <!-- 表单内容 -->
 
@@ -75,7 +75,7 @@
 
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="addSpace = false; spaceInfo = {}">取消</el-button>
+                <el-button @click="addSpaceClose">取消</el-button>
                 <el-button type="primary" @click="doAddSpace">
                     新增场地
                 </el-button>
@@ -181,6 +181,20 @@ const spaceRules =
             { required: false, message: '请输入详细描述', trigger: 'blur' },
         ]
     })
+
+
+const addSpaceClose = () => {
+    spaceInfo.value = {
+        spaceName: '',
+        spaceType: '',
+        location: '',
+        price: 0,
+        description: '',
+    }
+
+    ruleFormRef.value.resetFields()
+    addSpace.value = false
+}
 
 const OnCurrentChange = (pageNum) => {
     pageData.value.pageNum = pageNum;
