@@ -12,6 +12,7 @@
         <el-table-column prop="id" label="ID" width="100" />
         <el-table-column prop="spaceName" label="场地名称" width="180" />
         <el-table-column prop="spaceType" label="场地类型" width="180" />
+        <el-table-column prop="status" label="场地状态" width="180" />
         <el-table-column prop="location" label="场地位置" width="180" />
         <el-table-column prop="price" label="场地价格" width="100" align="center" />
         <el-table-column prop="description" label="场地描述" width="300" />
@@ -198,6 +199,7 @@ const getSpace = () => {
         tableData.value = res.data.list.map(item => ({
             ...item,
             price: item.price + "元/天",//将价格进行转换
+            status: item.status === "1" ? "已预约" : "未预约"
         }));
         pageData.value.total = res.data.total;
 
@@ -214,14 +216,13 @@ const doAddSpace = () => {
         if (valid) {
             addSpaceAPI(spaceInfo.value).then(res => {
                 ElMessage.success(res.msg)
-                getSpaceAPI().then(res => {
-                    tableData.value = res.data
-                })
+                getSpace()
                 addSpace.value = false
                 //关闭后取消验证提示
 
                 ruleFormRef.value.resetFields()
                 spaceInfo.value = {}
+
             })
         } else {
             ElMessage.error('请输入完整信息')
@@ -232,9 +233,7 @@ const doAddSpace = () => {
 const deleteSpace = (id) => {
     deleteSpaceAPI(id).then(res => {
         ElMessage.success(res.msg)
-        getSpaceAPI().then(res => {
-            tableData.value = res.data
-        })
+        getSpace()
     })
 }
 const updateSpace = (id) => {
@@ -251,9 +250,7 @@ const doUpdateSpace = () => {
 
             updateSpaceAPI(updateInfo.value).then(res => {
                 ElMessage.success(res.msg)
-                getSpaceAPI().then(res => {
-                    tableData.value = res.data
-                })
+                getSpace()
                 dialogVisibleUpdate.value = false
                 updateInfo.value = {}
             })

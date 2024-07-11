@@ -27,10 +27,6 @@
                 </el-button>
             </template>
         </el-table-column>
-
-
-
-
     </el-table>
 
     <!-- 删除器材 -->
