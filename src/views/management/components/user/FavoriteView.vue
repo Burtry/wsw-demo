@@ -1,8 +1,16 @@
 <template>
 
-
+    <h1>收藏器材</h1>
     <div class="goods-list">
         <GoodsItem v-for="item in equipmentList" :key="item.id" :goods="item" :category="'equipment'" :id="item.id">
+        </GoodsItem>
+    </div>
+
+
+
+    <h1>收藏场地</h1>
+    <div class="goods-list">
+        <GoodsItem v-for="item in spaceList" :key="item.id" :goods="item" :category="'space'" :id="item.id">
         </GoodsItem>
     </div>
 
@@ -38,17 +46,37 @@ const equipmentList = ref([
         id: '5',
         name: '器材',
         picture: '404.png'
-    },
+    }
+])
+
+const spaceList = ref([
+
     {
-        id: '6',
-        name: '器材',
+        id: '1',
+        name: '场地',
         picture: '404.png'
     },
     {
-        id: '7',
-        name: '器材',
+        id: '2',
+        name: '场地',
+        picture: '404.png'
+    },
+    {
+        id: '3',
+        name: '场地',
+        picture: '404.png'
+    },
+    {
+        id: '4',
+        name: '场地',
+        picture: '404.png'
+    },
+    {
+        id: '5',
+        name: '场地',
         picture: '404.png'
     }
+
 ])
 </script>
 

@@ -2,35 +2,30 @@
 
 
 defineProps({
-    goods: {
+    reserve: {
         type: Object,
         default: () => { }
-    },
-    category: {
-        type: String,
-        default: ''
-    },
-    id: {
-        type: Number,
-        default: 0
     }
 })
 </script>
 
 <template>
-    <RouterLink :to="`/${category}/${id}`" class="goods-item">
-        <img :src="goods.picture" alt="" />
-        <p class="name ellipsis">{{ goods.name }}</p>
-        <p class="desc ellipsis">{{ goods.desc }}</p>
-        <p class="price">{{ goods.price }}</p>
+    <RouterLink :to="``" class="reserve-item">
+        <img :src="reserve.name" alt="" />
+        <p class="name ellipsis">{{ reserve.spaceName }}</p>
+        <!-- 开始-结束时间 -->
+        <p class="desc ellipsis">开始时间:{{ reserve.startTime }}</p>
+        <p class="desc ellipsis">结束时间:{{ reserve.endTime }}</p>
+        <p class="price">{{ reserve.status }}</p>
+        <p>点击查看详情</p>
     </RouterLink>
 </template>
 
 
 <style scoped lang="scss">
-.goods-item {
+.reserve-item {
     display: block;
-    width: 250px;
+    width: 310px;
     padding: 20px 30px;
     text-align: center;
     transition: all .5s;
