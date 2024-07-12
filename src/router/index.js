@@ -57,7 +57,7 @@ const router = createRouter({
               component: () => import('@/views/management/components/admin/UserManagementView.vue')
             },
             {
-              path: 'systemmanagement',
+              path: 'system',
               component: () => import('@/views/management/components/admin/SystemManagement.vue')
             },
             {

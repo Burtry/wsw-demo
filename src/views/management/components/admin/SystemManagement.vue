@@ -1,3 +1,3 @@
 <template>
-    <div>system</div>
+    <div>数据总览</div>
 </template>

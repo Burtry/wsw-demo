@@ -1,5 +1,5 @@
 <template>
-    <h1 class="reserveTitle">预约记录管理</h1>
+    <h1 class="reserveTitle">场地预约记录管理</h1>
 
     <el-table :data="reserveList" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="预约ID" width="100" />
