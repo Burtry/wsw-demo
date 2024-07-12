@@ -56,3 +56,13 @@ export function resetPasswordAPI(id) {
 
     })
 }
+
+//验证当前身份
+export function verifyIdentityAPI(id) {
+    return instance({
+        url: "/management",
+        method: 'get',
+        params: { id }
+
+    })
+}

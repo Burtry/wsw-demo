@@ -173,11 +173,18 @@ import { useUserStore } from "@/stores/user.js";
 import GoodsItem from '@/views/home/GoodsItem.vue'
 import { updateUserInfoAPI } from '@/api/user.js'
 import { ElMessage } from 'element-plus';
+import { verifyIdentityAPI } from "@/api/user.js";
 
 const userStore = useUserStore();
 const userRole = computed(() => {
     return userStore.userInfo.role === 0 ? '管理员' : '普通用户';
 });
+
+const userId = computed(() => {
+    return userStore.userInfo.id;
+});
+
+verifyIdentityAPI(userId.value)
 
 const doEdit = ref(false)
 const ruleFormRef = ref()
