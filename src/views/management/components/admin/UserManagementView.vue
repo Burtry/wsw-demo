@@ -81,7 +81,12 @@ const resetPassword = ref(false)
 
 const getUserInfoList = () => {
     getUserInfoOfPageAPI(pageData.value).then(res => {
-        userList.value = res.data.list
+        // userList.value = res.data.list
+        //当role为0时是管理员，否则为普通用户
+        userList.value = res.data.list.map(item => ({
+            ...item,
+            role: item.role === 0 ? "管理员" : "普通用户"
+        }))
         pageData.value.total = res.data.total
 
     })

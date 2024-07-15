@@ -63,7 +63,7 @@
             </el-icon>
             <span>个人中心</span>
         </template>
-        <el-menu-item index="/management/user">我的信息</el-menu-item>
+        <el-menu-item index="/management">我的信息</el-menu-item>
         <el-menu-item index="/management/user/reservation">我的预约</el-menu-item>
         <el-menu-item index="/management/user/rental">我的租借</el-menu-item>
         <el-menu-item index="/management/user/favorite">我的收藏</el-menu-item>

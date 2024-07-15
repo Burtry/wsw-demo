@@ -120,7 +120,7 @@ const getReserveListOfPage = () => {
     getReserveListOfPageAPI(pageData.value).then(res => {
         reserveList.value = res.data.list.map(item => ({
             ...item,
-            reservationStatus: item.reservationStatus === "1" ? "已确认" : "已取消"
+            reservationStatus: item.reservationStatus === 1 ? "已预约" : item.reservationStatus === 2 ? "进行中" : item.reservationStatus === 3 ? "已完成" : "已取消"
         }))
         pageData.value.total = res.data.total;
     })

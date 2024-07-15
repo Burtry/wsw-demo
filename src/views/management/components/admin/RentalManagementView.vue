@@ -120,7 +120,8 @@ const getRentalPage = () => {
     getRentalPageAPI(pageData.value).then(res => {
         rentalList.value = res.data.list.map(item => ({
             ...item,
-            rentalStatus: item.rentalStatus === "1" ? "已确认" : "已取消"
+            //预约状态 3已完成/2进行中/1已预约/0已取消
+            rentalStatus: item.rentalStatus === 1 ? "已预约" : item.rentalStatus === 2 ? "进行中" : item.rentalStatus === 3 ? "已完成" : "已取消"
         }))
         pageData.value.total = res.data.total;
     })
