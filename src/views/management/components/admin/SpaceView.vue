@@ -125,11 +125,41 @@
         :page-sizes="[5, 10, 15, 20]" size="small" background layout="sizes, prev, pager, next, jumper,total, "
         :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
 
+    <div>
+        <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :http-request="uploadImage">
+            <el-icon>
+                <Plus />
+            </el-icon>
+        </el-upload>
+        <el-dialog v-model="imgDialogVisible">
+            <img w-full :src="dialogImageUrl" alt="Preview Image" />
+        </el-dialog>
+    </div>
 
 </template>
 
 
 <script setup>
+
+import { uploadImageImgAPI } from "@/api/common.js";
+//上传图片
+const uploadImage = (params) => {
+    uploadImageImgAPI(params.file).then((res) => {
+        // 将图片地址保存到 spaceInfo 对象中
+        spaceInfo.value.image = res.data;
+        dialogImageUrl.value = res.data
+        ElMessage({
+            message: "上传成功",
+            type: "success",
+        });
+    });
+
+}
+const imgDialogVisible = ref(false)
+const dialogImageUrl = ref('')
+
+
+
 
 import { ref } from 'vue'
 import { getSpaceAPI, addSpaceAPI, deleteSpaceAPI, updateSpaceAPI, getSpaceByIdAPI } from "@/api/space.js";
@@ -157,6 +187,7 @@ const spaceInfo = ref({
     location: '',
     price: 0,
     description: '',
+    image: '',
 })
 const spaceRules =
     ref({
@@ -182,7 +213,6 @@ const spaceRules =
         ]
     })
 
-
 const addSpaceClose = () => {
     spaceInfo.value = {
         spaceName: '',
@@ -206,8 +236,6 @@ const OnSizeChange = (pageSize) => {
     pageData.value.pageSize = pageSize;
     getSpace();
 }
-
-
 const getSpace = () => {
     getSpaceAPI(pageData.value).then(res => {
         tableData.value = res.data.list.map(item => ({
@@ -220,9 +248,6 @@ const getSpace = () => {
     })
 }
 getSpace();
-
-
-
 
 const doAddSpace = () => {
     //在校验通过后进行新增操作
@@ -275,6 +300,8 @@ const doUpdateSpace = () => {
     })
 }
 
+
+
 </script>
 
 <style lang="scss">
@@ -299,5 +326,10 @@ const doUpdateSpace = () => {
     justify-content: center;
     align-items: center;
     // height: 100%;
+}
+
+.upload-demo {
+    width: 400px;
+    margin: 50px auto;
 }
 </style>
