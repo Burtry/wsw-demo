@@ -126,7 +126,8 @@
         :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
 
     <div>
-        <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :http-request="uploadImage">
+        <el-upload class="upload-demo" ref="upload" list-type="picture-card" action=""
+            :on-preview="handlePictureCardPreview" :http-request="uploadImage">
             <el-icon>
                 <Plus />
             </el-icon>
@@ -137,12 +138,9 @@
     </div>
 
 </template>
-
-
 <script setup>
 
 import { uploadImageImgAPI } from "@/api/common.js";
-//上传图片
 const uploadImage = (params) => {
     uploadImageImgAPI(params.file).then((res) => {
         // 将图片地址保存到 spaceInfo 对象中
@@ -157,11 +155,13 @@ const uploadImage = (params) => {
 }
 const imgDialogVisible = ref(false)
 const dialogImageUrl = ref('')
-
-
+const handlePictureCardPreview = () => {
+    imgDialogVisible.value = true
+}
 
 
 import { ref } from 'vue'
+import { Plus } from '@element-plus/icons-vue'
 import { getSpaceAPI, addSpaceAPI, deleteSpaceAPI, updateSpaceAPI, getSpaceByIdAPI } from "@/api/space.js";
 import { ElMessage } from 'element-plus';
 const dialogVisible = ref(false)
