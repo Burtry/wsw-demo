@@ -16,7 +16,8 @@ defineProps({
         <!-- 开始-结束时间 -->
         <p class="desc ellipsis">开始时间:{{ reserve.startTime }}</p>
         <p class="desc ellipsis">结束时间:{{ reserve.endTime }}</p>
-        <p class="price">{{ reserve.status }}</p>
+        <p class="price">{{ reserve.reservationStatus === 1 ? "已预约" : reserve.reservationStatus === 2 ?
+        "进行中" : reserve.reservationStatus === 3 ? "已完成" : "已取消" }}</p>
         <p>点击查看详情</p>
     </RouterLink>
 </template>

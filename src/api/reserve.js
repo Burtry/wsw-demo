@@ -25,3 +25,11 @@ export function updateReserveAPI(params) {
         data: params
     })
 }
+
+//用户端text
+export function getReserveTextAPI() {
+    return instance({
+        url: `/user/reservation`,
+        method: 'get'
+    })
+}
