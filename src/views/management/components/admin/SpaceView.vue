@@ -5,9 +5,6 @@
     <el-button type="primary" class="btn" size="large" @click="addSpace = true">
         新增场地
     </el-button>
-
-
-
     <el-table :data="tableData" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="ID" width="100" />
         <el-table-column prop="spaceName" label="场地名称" width="180" />
@@ -61,6 +58,16 @@
             </el-form-item>
             <el-form-item label="位置" prop="location">
                 <el-input v-model="spaceInfo.location" />
+            </el-form-item>
+            <!-- 图片 限制最多上传3张 -->
+            <el-form-item label="场地图片" prop="img">
+                <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :limit="3"
+                    :on-exceed="handleExceed" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                    :http-request="uploadImage" v-model="spaceInfo.img">
+                    <el-icon>
+                        <Plus />
+                    </el-icon>
+                </el-upload>
             </el-form-item>
             <el-form-item label="价格" prop="price">
                 <el-input v-model="spaceInfo.price" />
@@ -125,17 +132,16 @@
         :page-sizes="[5, 10, 15, 20]" size="small" background layout="sizes, prev, pager, next, jumper,total, "
         :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
 
-    <div>
-        <el-upload class="upload-demo" ref="upload" list-type="picture-card" action=""
-            :on-preview="handlePictureCardPreview" :http-request="uploadImage">
-            <el-icon>
-                <Plus />
-            </el-icon>
-        </el-upload>
-        <el-dialog v-model="imgDialogVisible">
-            <img w-full :src="dialogImageUrl" alt="Preview Image" />
-        </el-dialog>
-    </div>
+    <el-upload class="upload-demo" ref="upload" list-type="picture-card" action=""
+        :on-preview="handlePictureCardPreview" :http-request="uploadImage" :limit="3" :on-exceed="handleExceed"
+        :on-remove="handleRemove">
+        <el-icon>
+            <Plus />
+        </el-icon>
+    </el-upload>
+    <el-dialog v-model="imgDialogVisible">
+        <img w-full :src="currentImageUrl" alt="Image" />
+    </el-dialog>
 
 </template>
 <script setup>
@@ -143,9 +149,12 @@
 import { uploadImageImgAPI } from "@/api/common.js";
 const uploadImage = (params) => {
     uploadImageImgAPI(params.file).then((res) => {
+        params.file.url = res.data
+
         // 将图片地址保存到 spaceInfo 对象中
-        spaceInfo.value.image = res.data;
-        dialogImageUrl.value = res.data
+        spaceInfo.value.img.push(res.data);
+        console.log(spaceInfo.value.img);
+        console.log(params.file.url);
         ElMessage({
             message: "上传成功",
             type: "success",
@@ -153,10 +162,33 @@ const uploadImage = (params) => {
     });
 
 }
+const upload = ref()
 const imgDialogVisible = ref(false)
-const dialogImageUrl = ref('')
-const handlePictureCardPreview = () => {
+const currentImageUrl = ref('')
+const handlePictureCardPreview = (file) => {
+    currentImageUrl.value = file.url
     imgDialogVisible.value = true
+}
+
+const handleExceed = () => {
+    ElMessage({
+        message: '最多上传三张图片',
+        type: 'warning',
+    })
+}
+
+const handleRemove = (file) => {
+    //移除该文件
+    const index = spaceInfo.value.img.findIndex(img => img === file.raw.url);
+    console.log(index);
+    if (index !== -1) {
+        spaceInfo.value.img.splice(index, 1);
+    }
+    console.log(spaceInfo.value.img);
+    ElMessage({
+        message: "图片已移除",
+        type: "success",
+    });
 }
 
 
@@ -187,7 +219,7 @@ const spaceInfo = ref({
     location: '',
     price: 0,
     description: '',
-    image: '',
+    img: [],
 })
 const spaceRules =
     ref({
@@ -220,9 +252,11 @@ const addSpaceClose = () => {
         location: '',
         price: 0,
         description: '',
+        img: [],
     }
 
     ruleFormRef.value.resetFields()
+    upload.value.clearFiles()
     addSpace.value = false
 }
 
@@ -260,8 +294,8 @@ const doAddSpace = () => {
                 //关闭后取消验证提示
 
                 ruleFormRef.value.resetFields()
-                spaceInfo.value = {}
 
+                upload.value.clearFiles()
             })
         } else {
             ElMessage.error('请输入完整信息')
