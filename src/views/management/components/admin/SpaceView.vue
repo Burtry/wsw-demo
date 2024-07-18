@@ -171,7 +171,6 @@ const uploadImageUpdate = (params) => {
         params.file.url = res.data
         // 将图片地址保存到 updateInfo 对象中
         fileListUpdate.value.push({
-            name: params.file.name,
             url: res.data,
             uid: params.file.uid,
             status: 'success'
@@ -302,9 +301,6 @@ const spaceRules =
         price: [
             { required: true, message: '请输入价格', trigger: 'blur' },
             { pattern: /^[0-9]+(\.[0-9]{1,2})?$/, message: '请输入正确的价格', trigger: 'blur' },
-        ],
-        img: [
-            { required: true, message: '请上传图片', trigger: 'blur' },
         ],
         //详细描述
         description: [
