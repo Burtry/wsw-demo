@@ -16,10 +16,10 @@
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
 
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
                 <el-button link type="primary" size="large" @click="updateSpace(row.id)">
-                    更改
+                    详情/更改
                 </el-button>
                 <el-button link type="primary" size="large" @click="dialogVisible = true; rowInfo.value = row">
                     删除
@@ -27,11 +27,9 @@
             </template>
         </el-table-column>
 
-
-
     </el-table>
 
-    <el-dialog v-model="dialogVisible" title="Tips" width="500" :before-close="handleClose">
+    <el-dialog v-model="dialogVisible" title="Tips" width="500">
         <span>你确定要删除这个场地吗</span>
         <template #footer>
             <div class="dialog-footer">
@@ -106,6 +104,20 @@
             <el-form-item label="位置" prop="location">
                 <el-input v-model="updateInfo.location" />
             </el-form-item>
+            <el-form-item label="场地图片" prop="img">
+
+                <el-upload class="upload-demo" ref="upload" action="" list-type="picture-card" :limit="3"
+                    :on-exceed="handleExceed" :file-list="fileListUpdate" :on-preview="handlePictureCardPreviewUpdate"
+                    :on-remove="handleRemoveUpdate" :http-request="uploadImageUpdate" v-model="updateInfo.img">
+                    <i class="el-icon-plus"></i>
+                    <el-icon>
+                        <Plus />
+                    </el-icon>
+                </el-upload>
+
+
+
+            </el-form-item>
             <el-form-item label="价格" prop="price">
                 <el-input v-model="updateInfo.price" />
             </el-form-item>
@@ -119,7 +131,7 @@
 
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="dialogVisibleUpdate = false; updateInfo = {}">取消</el-button>
+                <el-button @click="handleClose">取消</el-button>
                 <el-button type="primary" @click="doUpdateSpace">
                     更新场地
                 </el-button>
@@ -127,21 +139,14 @@
         </template>
     </el-dialog>
 
+    <el-dialog v-model="imgDialogVisible">
+        <img w-full :src="currentImageUrl" alt="Image" />
+    </el-dialog>
+
     <!-- 分页条 -->
     <el-pagination v-model:current-page="pageData.pageNum" v-model:page-size="pageData.pageSize"
         :page-sizes="[5, 10, 15, 20]" size="small" background layout="sizes, prev, pager, next, jumper,total, "
         :total="pageData.total" @size-change="OnSizeChange" @current-change="OnCurrentChange" class="mt-4 page" />
-
-    <el-upload class="upload-demo" ref="upload" list-type="picture-card" action=""
-        :on-preview="handlePictureCardPreview" :http-request="uploadImage" :limit="3" :on-exceed="handleExceed"
-        :on-remove="handleRemove">
-        <el-icon>
-            <Plus />
-        </el-icon>
-    </el-upload>
-    <el-dialog v-model="imgDialogVisible">
-        <img w-full :src="currentImageUrl" alt="Image" />
-    </el-dialog>
 
 </template>
 <script setup>
@@ -153,8 +158,6 @@ const uploadImage = (params) => {
 
         // 将图片地址保存到 spaceInfo 对象中
         spaceInfo.value.img.push(res.data);
-        console.log(spaceInfo.value.img);
-        console.log(params.file.url);
         ElMessage({
             message: "上传成功",
             type: "success",
@@ -162,7 +165,51 @@ const uploadImage = (params) => {
     });
 
 }
+
+const uploadImageUpdate = (params) => {
+    uploadImageImgAPI(params.file).then((res) => {
+        params.file.url = res.data
+        // 将图片地址保存到 updateInfo 对象中
+        fileListUpdate.value.push({
+            name: params.file.name,
+            url: res.data,
+            uid: params.file.uid,
+            status: 'success'
+        });
+        ElMessage({
+            message: "上传成功",
+            type: "success",
+        });
+    });
+}
 const upload = ref()
+const fileListUpdate = ref([])
+
+const handlePictureCardPreviewUpdate = (file) => {
+    currentImageUrl.value = file.url
+    imgDialogVisible.value = true
+}
+
+const handleRemoveUpdate = (file) => {
+
+    const index = fileListUpdate.value.findIndex(item => item.uid === file.uid);
+    if (index !== -1) {
+        fileListUpdate.value.splice(index, 1);
+    }
+}
+
+// 将字符串数组转换为文件列表格式
+const formatImgList = (imgArray) => {
+    return imgArray.map((img, index) => ({
+        name: `Image ${index + 1}`,
+        url: img,
+        uid: Date.now() + index,  // 生成唯一的uid
+        status: 'success'
+    }));
+};
+
+
+
 const imgDialogVisible = ref(false)
 const currentImageUrl = ref('')
 const handlePictureCardPreview = (file) => {
@@ -202,7 +249,14 @@ const ruleFormRef = ref()
 const tableData = ref([])
 const addSpace = ref(false)
 const rowInfo = ref({})
-const updateInfo = ref({})
+const updateInfo = ref({
+    spaceName: '',
+    spaceType: '',
+    location: '',
+    price: 0,
+    description: '',
+    img: [],
+})
 //分页数据模型
 const pageData = ref({
     pageNum: 1, //默认第一页
@@ -210,8 +264,6 @@ const pageData = ref({
     total: 0,
     sortBy: "",
 })
-
-
 const spaceInfo = ref({
 
     spaceName: '',
@@ -221,6 +273,19 @@ const spaceInfo = ref({
     description: '',
     img: [],
 })
+
+const handleClose = () => {
+    dialogVisibleUpdate.value = false;
+
+    updateInfo.value = {
+        spaceName: '',
+        spaceType: '',
+        location: '',
+        price: 0,
+        description: '',
+        img: [],
+    }
+}
 const spaceRules =
     ref({
         spaceName: [
@@ -237,6 +302,9 @@ const spaceRules =
         price: [
             { required: true, message: '请输入价格', trigger: 'blur' },
             { pattern: /^[0-9]+(\.[0-9]{1,2})?$/, message: '请输入正确的价格', trigger: 'blur' },
+        ],
+        img: [
+            { required: true, message: '请上传图片', trigger: 'blur' },
         ],
         //详细描述
         description: [
@@ -310,16 +378,37 @@ const deleteSpace = (id) => {
     })
 }
 const updateSpace = (id) => {
-    dialogVisibleUpdate.value = true
+    dialogVisibleUpdate.value = true;
     getSpaceByIdAPI(id).then(res => {
-        updateInfo.value = res.data
-    })
-}
+        if (typeof res.data === 'object') {
+            updateInfo.value = res.data;
+            // 将 img 字段从字符串转换为数组
+            if (typeof updateInfo.value.img === 'string') {
+                updateInfo.value.img = updateInfo.value.img
+                    .replace(/^\[|\]$/g, '')  // 去掉开头和结尾的方括号
+                    .split(',')               // 按逗号分割
+                    .map(url => url.trim());  // 去掉多余的空格
+                fileListUpdate.value = formatImgList(updateInfo.value.img);
+            } else {
+                updateInfo.value.img = [];
+                fileListUpdate.value = [];
+            }
+        } else {
+            console.error('API 返回的数据格式不正确');
+        }
+    });
 
+}
 const doUpdateSpace = () => {
     //在校验通过后进行新增操作
     ruleFormRef.value.validate((valid) => {
         if (valid) {
+
+            updateInfo.value.img = fileListUpdate.value
+
+            //将数组的img转换成字符串的img
+            updateInfo.value.img = '[' + updateInfo.value.img.map(item => item.url).join(',') + ']';
+
 
             updateSpaceAPI(updateInfo.value).then(res => {
                 ElMessage.success(res.msg)
