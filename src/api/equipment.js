@@ -10,6 +10,14 @@ export function getEquipmentAPI(params) {
     })
 }
 
+//获取全部器材
+export function getAllEquipmentAPI() {
+    return instance({
+        url: '/equipment/all',
+        method: 'get'
+    })
+}
+
 //新增器材
 export function addEquipmentAPI(params) {
     return instance({

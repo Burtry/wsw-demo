@@ -148,9 +148,8 @@
                     <h4 data-v-bcb266e0="">猜你喜欢</h4>
                 </div>
                 <div class="goods-list">
-                    <GoodsItem v-for="item in equipmentList" :key="item.id" :goods="item" :category="'equipment'"
-                        :id="item.id">
-                    </GoodsItem>
+                    <EquipmentItem v-for="item in list" :key="item.id" :equipments="item" :id="item.id">
+                    </EquipmentItem>
                 </div>
             </div>
         </div>
@@ -160,7 +159,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-
+import EquipmentItem from '@/views/home/EquipmentItem.vue'
 import { UserFilled } from '@element-plus/icons-vue'
 import {
     Iphone,
@@ -169,11 +168,28 @@ import {
     Tickets,
     User,
 } from '@element-plus/icons-vue'
+
 import { useUserStore } from "@/stores/user.js";
-import GoodsItem from '@/views/home/GoodsItem.vue'
+// import SpaceItem from '@/views/home/SpaceItem.vue'
 import { updateUserInfoAPI } from '@/api/user.js'
 import { ElMessage } from 'element-plus';
 import { verifyIdentityAPI } from "@/api/user.js";
+import { getAllEquipmentAPI } from "@/api/equipment.js"
+const list = ref([])
+const equipmentList = ref([])
+getAllEquipmentAPI().then(res => {
+    equipmentList.value = res.data.map(equipment => {
+        return {
+            ...equipment,
+            img: equipment.img ? equipment.img.slice(1, -1).split(',') : [],
+            rentalPrice: equipment.rentalPrice + "元/天"
+        }
+    })
+
+    list.value = equipmentList.value.slice(0, 4)
+})
+
+
 
 const userStore = useUserStore();
 const userRole = computed(() => {
@@ -252,30 +268,6 @@ const updateUserInfo = async () => {
 
 
 }
-
-
-const equipmentList = ref([
-    {
-        id: '1',
-        name: '器材',
-        picture: '404.png'
-    },
-    {
-        id: '2',
-        name: '器材',
-        picture: '404.png'
-    },
-    {
-        id: '3',
-        name: '器材',
-        picture: '404.png'
-    },
-    {
-        id: '4',
-        name: '器材',
-        picture: '404.png'
-    },
-])
 
 </script>
 

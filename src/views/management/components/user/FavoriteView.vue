@@ -2,16 +2,16 @@
 
     <h1>收藏器材</h1>
     <div class="goods-list">
-        <GoodsItem v-for="item in equipmentList" :key="item.id" :goods="item" :category="'equipment'" :id="item.id">
-        </GoodsItem>
+        <SpaceItem v-for="item in equipmentList" :key="item.id" :goods="item" :category="'equipment'" :id="item.id">
+        </SpaceItem>
     </div>
 
 
 
     <h1>收藏场地</h1>
     <div class="goods-list">
-        <GoodsItem v-for="item in spaceList" :key="item.id" :goods="item" :category="'space'" :id="item.id">
-        </GoodsItem>
+        <SpaceItem v-for="item in spaceList" :key="item.id" :goods="item" :category="'space'" :id="item.id">
+        </SpaceItem>
     </div>
 
 
@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import GoodsItem from '@/views/home/GoodsItem.vue';
+import SpaceItem from '@/views/home/SpaceItem.vue';
 const equipmentList = ref([
     {
         id: '1',

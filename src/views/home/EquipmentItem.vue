@@ -2,13 +2,9 @@
 
 
 defineProps({
-    goods: {
+    equipments: {
         type: Object,
         default: () => { }
-    },
-    category: {
-        type: String,
-        default: ''
     },
     id: {
         type: Number,
@@ -18,11 +14,11 @@ defineProps({
 </script>
 
 <template>
-    <RouterLink :to="`/${category}/${id}`" class="goods-item">
-        <img :src="goods.img[0]" alt="" />
-        <p class="name ellipsis">{{ goods.spaceName }}</p>
-        <p class="desc ellipsis">{{ goods.location }}</p>
-        <p class="price">{{ goods.price }}</p>
+    <RouterLink :to="`/equipment/${id}`" class="goods-item">
+        <img :src="equipments.img[0]" alt="" />
+        <p class="name ellipsis">{{ equipments.equipmentName }}</p>
+        <p class="price">{{ equipments.rentalPrice }}</p>
+        <p>查看详情>>></p>
     </RouterLink>
 </template>
 
