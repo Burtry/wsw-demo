@@ -17,10 +17,10 @@
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
 
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="180">
             <template #default="{ row }">
                 <el-button link type="primary" size="large" @click="getEquipmentInfo(row.id)">
-                    更改
+                    详情/更改
                 </el-button>
                 <el-button link type="primary" size="large" @click="deleteEquipment = true; rowInfo.value = row">
                     删除
@@ -54,6 +54,17 @@
             </el-form-item>
             <el-form-item label="器材类型" prop="EquipmentType">
                 <el-input v-model="equipmentInfo.equipmentType" />
+            </el-form-item>
+
+            <el-form-item label="器材图片" prop="img">
+                <!-- 图片 限制最多上传3张 -->
+                <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :limit="3"
+                    :on-exceed="handleExceed" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+                    :http-request="uploadImage" v-model="equipmentInfo.img">
+                    <el-icon>
+                        <Plus />
+                    </el-icon>
+                </el-upload>
             </el-form-item>
             <el-form-item label="租借价格" prop="rentalPrice">
                 <el-input v-model="equipmentInfo.rentalPrice" />
@@ -89,6 +100,18 @@
             <el-form-item label="器材类型" prop="equipmentType">
                 <el-input v-model="updateInfo.equipmentType" />
             </el-form-item>
+
+            <el-form-item label="场地图片" prop="img">
+
+                <el-upload class="upload-demo" ref="upload" action="" list-type="picture-card" :limit="3"
+                    :on-exceed="handleExceed" :file-list="fileListUpdate" :on-preview="handlePictureCardPreviewUpdate"
+                    :on-remove="handleRemoveUpdate" :http-request="uploadImageUpdate" v-model="updateInfo.img">
+                    <i class="el-icon-plus"></i>
+                    <el-icon>
+                        <Plus />
+                    </el-icon>
+                </el-upload>
+            </el-form-item>
             <el-form-item label="价格" prop="rentalPrice">
                 <el-input v-model="updateInfo.rentalPrice" />
             </el-form-item>
@@ -110,6 +133,10 @@
         </template>
     </el-dialog>
 
+    <el-dialog v-model="imgDialogVisible">
+        <img w-full :src="currentImageUrl" alt="Image" />
+    </el-dialog>
+
 
     <!-- 分页条 -->
     <el-pagination v-model:current-page="pageData.pageNum" v-model:page-size="pageData.pageSize"
@@ -121,6 +148,74 @@
 
 
 <script setup>
+import { uploadImageImgAPI } from "@/api/common";
+import { Plus } from "@element-plus/icons-vue"
+const upload = ref()
+const currentImageUrl = ref('')
+const imgDialogVisible = ref(false)
+const fileListUpdate = ref([])
+const uploadImage = (params) => {
+    uploadImageImgAPI(params.file).then(res => {
+        equipmentInfo.value.img.push(res.data)
+        ElMessage.success("上传成功")
+    })
+}
+
+const uploadImageUpdate = (params) => {
+    uploadImageImgAPI(params.file).then((res) => {
+        params.file.url = res.data
+        // 将图片地址保存到 updateInfo 对象中
+        fileListUpdate.value.push({
+            url: res.data,
+            uid: params.file.uid,
+            status: 'success'
+        });
+        ElMessage({
+            message: "上传成功",
+            type: "success",
+        });
+    });
+}
+
+const handlePictureCardPreviewUpdate = (file) => {
+    currentImageUrl.value = file.url
+    imgDialogVisible.value = true
+}
+
+const handleRemoveUpdate = (file) => {
+
+    const index = fileListUpdate.value.findIndex(item => item.uid === file.uid);
+    if (index !== -1) {
+        fileListUpdate.value.splice(index, 1);
+    }
+}
+
+const handleExceed = () => {
+    ElMessage({
+        message: '最多上传三张图片',
+        type: 'warning',
+    })
+}
+
+const handlePictureCardPreview = (file) => {
+    currentImageUrl.value = file.url
+    imgDialogVisible.value = true
+}
+
+const handleRemove = (file) => {
+    //移除该文件
+    const index = equipmentInfo.value.img.findIndex(img => img === file.raw.url);
+    console.log(index);
+    if (index !== -1) {
+        equipmentInfo.value.img.splice(index, 1);
+    }
+    console.log(equipmentInfo.value.img);
+    ElMessage({
+        message: "图片已移除",
+        type: "success",
+    });
+}
+
 import { getEquipmentAPI, addEquipmentAPI, deleteEquipmentAPI, updateEquipmentAPI, getEquipmentByIdAPI } from "@/api/equipment";
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
@@ -132,6 +227,7 @@ const equipmentInfo = ref({
 
     equipmentName: "",
     equipmentType: "",
+    img: [],
     rentalPrice: "",
     //默认未租借
     status: "0",
@@ -251,12 +347,44 @@ const doDeleteEquipment = (id) => {
 const getEquipmentInfo = (id) => {
     getEquipmentByIdAPI(id).then(res => {
         updateInfo.value = res.data;
+        if (typeof res.data === 'object') {
+            updateInfo.value = res.data;
+            // 将 img 字段从字符串转换为数组
+            if (typeof updateInfo.value.img === 'string') {
+                updateInfo.value.img = updateInfo.value.img
+                    .replace(/^\[|\]$/g, '')  // 去掉开头和结尾的方括号
+                    .split(',')               // 按逗号分割
+                    .map(url => url.trim());  // 去掉多余的空格
+                fileListUpdate.value = formatImgList(updateInfo.value.img);
+            } else {
+                updateInfo.value.img = [];
+                fileListUpdate.value = [];
+            }
+        } else {
+            console.error('API 返回的数据格式不正确');
+        }
         updateEquipment.value = true;
     })
 }
 
+// 将字符串数组转换为文件列表格式
+const formatImgList = (imgArray) => {
+    return imgArray.map((img, index) => ({
+        name: `Image ${index + 1}`,
+        url: img,
+        uid: Date.now() + index,  // 生成唯一的uid
+        status: 'success'
+    }));
+};
 //更新器材
 const doUpdateEquipment = () => {
+
+    updateInfo.value.img = fileListUpdate.value
+
+    //将数组的img转换成字符串的img
+    updateInfo.value.img = '[' + updateInfo.value.img.map(item => item.url).join(',') + ']';
+
+
     updateEquipmentAPI(updateInfo.value).then(res => {
 
         if (res.code === 1) {
