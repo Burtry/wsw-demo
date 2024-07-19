@@ -19,9 +19,9 @@ defineProps({
 
 <template>
     <RouterLink :to="`/${category}/${id}`" class="goods-item">
-        <img :src="goods.picture" alt="" />
-        <p class="name ellipsis">{{ goods.name }}</p>
-        <p class="desc ellipsis">{{ goods.desc }}</p>
+        <img :src="goods.img[0]" alt="" />
+        <p class="name ellipsis">{{ goods.spaceName }}</p>
+        <p class="desc ellipsis">{{ goods.location }}</p>
         <p class="price">{{ goods.price }}</p>
     </RouterLink>
 </template>
@@ -53,7 +53,7 @@ defineProps({
         font-size: 16px;
     }
 
-    .desc {
+    .location {
         color: #999;
         height: 29px;
     }

@@ -11,6 +11,16 @@ export function getSpaceAPI(params) {
     )
 }
 
+//获取全部场地信息
+export function getAllSpaceAPI() {
+    return instance(
+        {
+            url: "/space/all",
+            method: "get"
+        }
+    )
+}
+
 //新增场地
 export function addSpaceAPI(params) {
     return instance(

@@ -1,63 +1,25 @@
 <script setup>
 import { ref } from 'vue';
 import GoodsItem from '../home/GoodsItem.vue'
-const bannerList = ref([
-    {
-        id: 1,
-        imgUrl: 'https://fuss10.elemecdn.com/a/3f/3302e58f9a181d2066abf7e33d583bjpeg.jpeg'
-    },
-    {
-        id: 2,
-        imgUrl: 'https://fuss10.elemecdn.com/1/34/19aa98b1fcb2d13fe76c56e505490jpeg.jpeg'
-    },
-    {
-        id: 3,
-        imgUrl: 'https://fuss10.elemecdn.com/0/6f/e35ff3758149bf9669b8jpeg.jpeg'
-    },
-    {
-        id: 4,
-        imgUrl: 'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbjpeg.jpeg'
-    },
-    {
-        id: 5,
-        imgUrl: 'https://fuss10.elemecdn.com/d/e6/0fc7240532fdaf769a25683617711jpeg.jpeg'
-    },
+import { getAllSpaceAPI } from "@/api/space";
+const spaceList = ref([])
+getAllSpaceAPI().then(res => {
+    spaceList.value = res.data.map(space => {
+        return {
+            ...space,
+            img: space.img.slice(1, -1).split(','),
+            price: space.price + "元/天"
+        }
+    })
 
-])
-const spaceList = ref([
-    {
-        id: '1',
-        name: '场地',
-        picture: '404.png'
-    },
-    {
-        id: '2',
-        name: '场地',
-        picture: '404.png'
-    },
-    {
-        id: '3',
-        name: '场地',
-        picture: '404.png'
-    },
-    {
-        id: '4',
-        name: '场地',
-        picture: '404.png'
-    },
-    {
-        id: '4',
-        name: '场地',
-        picture: '404.png'
-    }
-])
+})
 </script>
 
 <template>
     <div class="home-banner">
         <el-carousel height="500px">
-            <el-carousel-item v-for="item in bannerList" :key="item.id">
-                <img :src="item.imgUrl" alt="">
+            <el-carousel-item v-for="item in spaceList" :key="item.id">
+                <img :src="item.img[0]" alt="">
             </el-carousel-item>
         </el-carousel>
     </div>
