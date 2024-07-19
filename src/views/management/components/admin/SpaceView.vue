@@ -58,7 +58,7 @@
                 <el-input v-model="spaceInfo.location" />
             </el-form-item>
             <!-- 图片 限制最多上传3张 -->
-            <el-form-item label="场地图片" prop="img">
+            <el-form-item label="场地图片" prop="img" v-loading="loading">
                 <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :limit="3"
                     :on-exceed="handleExceed" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
                     :http-request="uploadImage" v-model="spaceInfo.img">
@@ -104,7 +104,7 @@
             <el-form-item label="位置" prop="location">
                 <el-input v-model="updateInfo.location" />
             </el-form-item>
-            <el-form-item label="场地图片" prop="img">
+            <el-form-item label="场地图片" prop="img" v-loading="loading">
 
                 <el-upload class="upload-demo" ref="upload" action="" list-type="picture-card" :limit="3"
                     :on-exceed="handleExceed" :file-list="fileListUpdate" :on-preview="handlePictureCardPreviewUpdate"
@@ -150,9 +150,11 @@
 
 </template>
 <script setup>
+const loading = ref(false)
 
 import { uploadImageImgAPI } from "@/api/common.js";
 const uploadImage = (params) => {
+    loading.value = true
     uploadImageImgAPI(params.file).then((res) => {
         params.file.url = res.data
 
@@ -162,12 +164,15 @@ const uploadImage = (params) => {
             message: "上传成功",
             type: "success",
         });
+        loading.value = false
     });
 
 }
 
 const uploadImageUpdate = (params) => {
+    loading.value = true
     uploadImageImgAPI(params.file).then((res) => {
+
         params.file.url = res.data
         // 将图片地址保存到 updateInfo 对象中
         fileListUpdate.value.push({
@@ -179,6 +184,7 @@ const uploadImageUpdate = (params) => {
             message: "上传成功",
             type: "success",
         });
+        loading.value = false
     });
 }
 const upload = ref()

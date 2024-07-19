@@ -56,7 +56,7 @@
                 <el-input v-model="equipmentInfo.equipmentType" />
             </el-form-item>
 
-            <el-form-item label="器材图片" prop="img">
+            <el-form-item label="器材图片" prop="img" v-loading="loading">
                 <!-- 图片 限制最多上传3张 -->
                 <el-upload class="upload-demo" ref="upload" list-type="picture-card" action="" :limit="3"
                     :on-exceed="handleExceed" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
@@ -101,7 +101,7 @@
                 <el-input v-model="updateInfo.equipmentType" />
             </el-form-item>
 
-            <el-form-item label="场地图片" prop="img">
+            <el-form-item label="场地图片" prop="img" v-loading="loading">
 
                 <el-upload class="upload-demo" ref="upload" action="" list-type="picture-card" :limit="3"
                     :on-exceed="handleExceed" :file-list="fileListUpdate" :on-preview="handlePictureCardPreviewUpdate"
@@ -145,9 +145,9 @@
 
 
 </template>
-
-
 <script setup>
+
+const loading = ref(false)
 import { uploadImageImgAPI } from "@/api/common";
 import { Plus } from "@element-plus/icons-vue"
 const upload = ref()
@@ -155,13 +155,16 @@ const currentImageUrl = ref('')
 const imgDialogVisible = ref(false)
 const fileListUpdate = ref([])
 const uploadImage = (params) => {
+    loading.value = true
     uploadImageImgAPI(params.file).then(res => {
         equipmentInfo.value.img.push(res.data)
         ElMessage.success("上传成功")
+        loading.value = false
     })
 }
 
 const uploadImageUpdate = (params) => {
+    loading.value = true
     uploadImageImgAPI(params.file).then((res) => {
         params.file.url = res.data
         // 将图片地址保存到 updateInfo 对象中
@@ -174,6 +177,7 @@ const uploadImageUpdate = (params) => {
             message: "上传成功",
             type: "success",
         });
+        loading.value = false
     });
 }
 
