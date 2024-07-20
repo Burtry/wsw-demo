@@ -368,7 +368,7 @@ const doAddSpace = () => {
                 upload.value.clearFiles()
             })
         } else {
-            ElMessage.error('请输入完整信息')
+            ElMessage.error('新增失败')
         }
     })
 
