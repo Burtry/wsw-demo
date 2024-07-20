@@ -30,7 +30,7 @@
     </el-table>
 
     <!-- 删除器材 -->
-    <el-dialog v-model="deleteEquipment" title="Tips" width="500" :before-close="handleClose">
+    <el-dialog v-model="deleteEquipment" title="Tips" width="500">
         <span>你确定要删除这个场地吗</span>
         <template #footer>
             <div class="dialog-footer">
@@ -125,7 +125,7 @@
 
         <template #footer>
             <div class="dialog-footer">
-                <el-button @click="updateEquipment = false; updateInfo = {}">取消</el-button>
+                <el-button @click="handleClose">取消</el-button>
                 <el-button type="primary" @click="doUpdateEquipment">
                     更新器材
                 </el-button>
@@ -159,8 +159,8 @@ const uploadImage = (params) => {
     uploadImageImgAPI(params.file).then(res => {
         equipmentInfo.value.img.push(res.data)
         ElMessage.success("上传成功")
-        loading.value = false
     })
+    loading.value = false
 }
 
 const uploadImageUpdate = (params) => {
@@ -178,7 +178,21 @@ const uploadImageUpdate = (params) => {
             type: "success",
         });
         loading.value = false
+
     });
+}
+
+const handleClose = () => {
+
+    updateEquipment.value = false
+    updateInfo.value = {
+        equipmentName: "",
+        equipmentType: "",
+        img: [],
+        rentalPrice: "",
+        status: "0",
+        description: "",
+    }
 }
 
 const handlePictureCardPreviewUpdate = (file) => {
@@ -200,6 +214,7 @@ const handleExceed = () => {
         type: 'warning',
     })
 }
+
 
 const handlePictureCardPreview = (file) => {
     currentImageUrl.value = file.url
@@ -275,14 +290,17 @@ const equipmentRules = ref({
 const addEquipmentClose = () => {
 
     equipmentInfo.value = {
-        equipmentName: "",
-        equipmentType: "",
-        rentalPrice: "",
+        equipmentName: '',
+        equipmentType: '',
+        rentalPrice: '',
         //默认未租借
         status: "0",
-        description: "",
+        description: '',
+        img: []
     }
 
+    ruleFormRef.value.resetFields()
+    upload.value.clearFiles()
     addEquipment.value = false;
 }
 
@@ -318,15 +336,22 @@ const doAddEquipment = () => {
                 if (res.code === 1) {
                     ElMessage.success("新增成功!")
                     getEquipment();
-                    addEquipment.value = false;
+
                     equipmentInfo.value = {
-                        equipmentName: "",
-                        equipmentType: "",
-                        rentalPrice: "",
+                        equipmentName: '',
+                        equipmentType: '',
+                        rentalPrice: '',
                         //默认未租借
                         status: "0",
-                        description: "",
+                        description: '',
+                        img: []
                     }
+                    addEquipment.value = false;
+                    //关闭后取消验证提示
+
+                    ruleFormRef.value.resetFields()
+
+                    upload.value.clearFiles()
                 } else {
                     ElMessage.error("新增失败!")
                 }
