@@ -33,7 +33,7 @@ getAllSpaceAPI().then(res => {
     </div>
     <h3>全部场地</h3>
     <div class="body">
-        <SpaceItem v-for="item in spaceList" :key="item.id" :spaces="item" :id="item.id">
+        <SpaceItem v-for="item in spaceList" :key="item.id" :spaces="item" :id="item.id" class="spaceItem">
         </SpaceItem>
     </div>
 
@@ -66,5 +66,10 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     padding: 0 10px;
+}
+
+.spaceItem {
+    /* 元素居中显示 */
+    margin: 0 auto;
 }
 </style>

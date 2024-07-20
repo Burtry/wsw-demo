@@ -29,7 +29,8 @@ getAllEquipmentAPI().then(res => {
     </div>
     <h3>全部器材</h3>
     <div class="body">
-        <EquipmentItem v-for="item in equipmentList" :key="item.id" :equipments="item" :id="item.id">
+        <EquipmentItem v-for="item in equipmentList" :key="item.id" :equipments="item" :id="item.id"
+            class="equipmentItem">
         </EquipmentItem>
     </div>
 
@@ -62,5 +63,10 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     padding: 0 10px;
+}
+
+.equipmentItem {
+    /* 元素居中显示 */
+    margin: 0 auto;
 }
 </style>
