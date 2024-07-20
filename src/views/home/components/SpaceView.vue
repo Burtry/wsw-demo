@@ -2,43 +2,31 @@
 import HomePanel from '../HomePanel.vue'
 import { ref } from 'vue'
 
+import { getAllSpaceAPI } from "@/api/space.js";
+const spaceList = ref([])
+const limitSpaceList = ref([])
+getAllSpaceAPI().then(res => {
+    spaceList.value = res.data.map(space => {
+        return {
+            ...space,
+            img: space.img ? space.img.slice(1, -1).split(',') : [],
+            price: space.price + "元/天"
+        }
+    })
 
-const spaceList = ref([
-    {
-        id: '1',
-        name: '场地1',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '2',
-        name: '场地2',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '3',
-        name: '场地3',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '4',
-        name: '场地4',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    }
-])
-
+    limitSpaceList.value = spaceList.value.slice(0, 4) //只取前4个展示
+})
 
 </script>
-
 <template>
     <HomePanel title="场地展示" sub-title="场地展示 副标题" category="space">
         <template #main>
             <ul class="goods-list">
-                <li v-for="item in spaceList" :key="item.id">
-                    <RouterLink :to="`/space/${item.id}`">
-                        <img src="@/assets/images/404.png" :alt="item.name" />
-                        <p class="name">{{ item.name }}</p>
-                        <!-- TODO -->
-
+                <li v-for="item in limitSpaceList" :key="item.id">
+                    <RouterLink :to="`/space/${item.id}`" class="goods-item">
+                        <img :src="item.img[0]" alt="" />
+                        <p class="name">{{ item.spaceName }}</p>
+                        <p class="price">{{ item.price }}</p>
                     </RouterLink>
                 </li>
             </ul>

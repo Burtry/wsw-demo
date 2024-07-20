@@ -1,35 +1,22 @@
 <script setup>
 import HomePanel from '../HomePanel.vue'
 import { ref } from 'vue'
+import { getAllEquipmentAPI } from "@/api/equipment.js";
 
 
-const spaceList = ref([
-    {
-        id: '1',
-        name: '器材1',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '2',
-        name: '器材2',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '3',
-        name: '器材3',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '4',
-        name: '器材4',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    },
-    {
-        id: '4',
-        name: '器材4',
-        picture: 'https://yanxuan-item.nosdn.127.net/e54f83bde30509f3440fa05c31d080aa.png?type=webp&imageView&quality=95&thumbnail=330x330'
-    }
-])
+const equipmentList = ref([])
+const limitEquipmentList = ref([])
+getAllEquipmentAPI().then(res => {
+    equipmentList.value = res.data.map(equipment => {
+        return {
+            ...equipment,
+            img: equipment.img ? equipment.img.slice(1, -1).split(',') : [],
+            rentalPrice: equipment.rentalPrice + "元/天"
+        }
+    })
+
+    limitEquipmentList.value = equipmentList.value.slice(0, 5) //只取前5个展示
+})
 
 
 
@@ -40,12 +27,11 @@ const spaceList = ref([
     <HomePanel title="器材展示" sub-title="器材展示 副标题" category="equipment">
         <template #main>
             <ul class="goods-list">
-                <li v-for="item in spaceList" :key="item.id">
-                    <RouterLink :to="`/equipment/${item.id}`">
-                        <img src="@/assets/images/404.png" :alt="item.name" />
-                        <p class="name">{{ item.name }}</p>
-                        <!-- TODO -->
-                        <!-- <el-button type="primary" class="button">租借</el-button> -->
+                <li v-for="item in limitEquipmentList" :key="item.id">
+                    <RouterLink :to="`/equipment/${item.id}`" class="goods-item">
+                        <img :src="item.img[0]" alt="" />
+                        <p class="name">{{ item.equipmentName }}</p>
+                        <p class="price">{{ item.rentalPrice }}</p>
                     </RouterLink>
                 </li>
             </ul>
@@ -55,22 +41,6 @@ const spaceList = ref([
 
 
 <style scoped lang='scss'>
-// .button {
-//     width: 150px;
-//     height: 40px;
-//     margin-top: 20px;
-//     font-size: 18px;
-//     //背景色
-//     background-color: #27ba9b;
-//     margin-left: 45px;
-//     //文字颜色
-//     color: #fff;
-//     //圆角
-//     border-radius: 20px;
-//     //边框
-//     border: none;
-// }
-
 .goods-list {
     display: flex;
     justify-content: space-between;
