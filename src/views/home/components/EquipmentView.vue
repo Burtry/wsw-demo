@@ -50,7 +50,7 @@ getAllEquipmentAPI().then(res => {
         width: 306px;
         height: 406px;
 
-        background: #f0f9f4;
+        background: #fff;
         transition: all .5s;
 
         &:hover {
