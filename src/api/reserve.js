@@ -27,10 +27,11 @@ export function updateReserveAPI(params) {
 }
 
 //用户端text
-export function getReserveTextAPI() {
+export function getReserveTextAPI(radioStatus) {
     return instance({
         url: `/user/reservation`,
-        method: 'get'
+        method: 'get',
+        params: { radioStatus }
     })
 }
 

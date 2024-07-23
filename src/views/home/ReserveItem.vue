@@ -11,7 +11,7 @@ defineProps({
 
 <template>
     <RouterLink :to="``" class="reserve-item">
-        <img :src="reserve.name" alt="" />
+        <img :src="reserve.img[0]" alt="" />
         <p class="name ellipsis">{{ reserve.spaceName }}</p>
         <!-- 开始-结束时间 -->
         <p class="desc ellipsis">开始时间:{{ reserve.startTime }}</p>
