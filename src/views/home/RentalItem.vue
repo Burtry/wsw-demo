@@ -11,13 +11,14 @@ defineProps({
 
 <template>
     <RouterLink :to="``" class="rental-item">
-        <img :src="rental.name" alt="" />
-        <p class="name ellipsis">{{ rental.EquipmentName }}</p>
+        <img :src="rental.img[0]" alt="" />
+        <p class="name ellipsis">{{ rental.equipmentName }}</p>
         <!-- 开始-结束时间 -->
         <p class="desc ellipsis">开始时间:{{ rental.startTime }}</p>
         <p class="desc ellipsis">结束时间:{{ rental.endTime }}</p>
-        <p class="price">{{ rental.status }}</p>
-        <p>点击查看详情</p>
+        <p class="price">{{ rental.rentalStatus === 1 ? '已租借' : rental.rentalStatus === 2 ? '进行中' : rentalStatus === 3
+        ? " 未归还" : rental.rentalStatus === 4 ? "已归还" : "已取消" }}</p>
+        <p class="remark">备注: {{ rental.remark }}</p>
     </RouterLink>
 </template>
 
@@ -56,6 +57,11 @@ defineProps({
     .price {
         color: #cf4444;
         font-size: 20px;
+    }
+
+    .remark {
+        color: #999;
+        font-size: 14px;
     }
 }
 </style>

@@ -55,7 +55,6 @@ const handleClose = () => {
 const openReservation = (item) => {
     reservationDetail.value = item
     dialogVisible.value = true
-    console.log(reservationDetail.value);
 
 }
 

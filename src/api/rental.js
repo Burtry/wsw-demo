@@ -28,3 +28,12 @@ export function updateRentalAPI(params) {
     })
 
 }
+
+//用户端获取租借信息
+export function getUserRentalAPI(radioStatus) {
+    return instance({
+        url: '/user/rentals',
+        method: 'get',
+        params: { radioStatus }
+    })
+}
