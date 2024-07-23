@@ -33,3 +33,10 @@ export function getReserveTextAPI() {
         method: 'get'
     })
 }
+
+//用户端用户添加预约
+export function addReserveAPI(params) {
+    return instance({ url: '/user/reservation', method: 'post', data: params }
+
+    )
+}

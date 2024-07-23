@@ -18,7 +18,7 @@ defineProps({
         <p class="desc ellipsis">结束时间:{{ reserve.endTime }}</p>
         <p class="price">{{ reserve.reservationStatus === 1 ? "已预约" : reserve.reservationStatus === 2 ?
         "进行中" : reserve.reservationStatus === 3 ? "已完成" : "已取消" }}</p>
-        <p>点击查看详情</p>
+        <p class="remark">备注:{{ reserve.remark }}</p>
     </RouterLink>
 </template>
 
@@ -57,6 +57,12 @@ defineProps({
     .price {
         color: #cf4444;
         font-size: 20px;
+    }
+
+    .remark {
+        color: #999;
+        font-size: 14px;
+        // 左对齐
     }
 }
 </style>

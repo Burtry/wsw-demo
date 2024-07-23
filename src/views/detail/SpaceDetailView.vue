@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import { getSpaceByIdAPI } from "@/api/space.js";
 import { useRoute } from "vue-router";
+import { useUserStore } from "@/stores/user.js";
+import { ElMessage } from 'element-plus';
+
+const userStore = useUserStore();
+const userInfo = ref({})
+userInfo.value = userStore.userInfo;
 
 const route = useRoute();
 const spaceId = route.params.id;
@@ -20,6 +26,63 @@ getSpaceByIdAPI(spaceId).then((res) => {
 }).catch(error => {
     console.error('获取场地数据时出错:', error);
 });
+
+
+/**预约信息处理 */
+const dialogVisible = ref(false);
+const form = ref({})
+const reserveInfo = ref({
+    userId: userInfo.value.id,
+    spaceId: spaceId,
+    startTime: '',
+    endTime: '',
+    reservationStatus: 0, //未预约状态
+    remark: '',
+})
+const handleOpen = () => {
+    //封装预约信息reserveInfo
+    // 打开对话框
+    dialogVisible.value = true;
+}
+
+const handleClose = () => {
+    dialogVisible.value = false;
+    reserveInfo.value =
+    {
+        userId: userInfo.value.id,
+        spaceId: spaceId,
+        startTime: '',
+        endTime: '',
+        reservationStatus: 0, //未预约状态
+        remark: '',
+    }
+    //清空表单
+    form.value = {}
+}
+
+import { addReserveAPI } from "@/api/reserve.js";
+const reserveSpace = () => {
+    // 验证表单
+    if (!form.value.reserveDateTime) {
+        ElMessage.error('请选择预约时间');
+        return;
+    }
+    //预约信息添加
+    reserveInfo.value.startTime = form.value.reserveDateTime[0];
+    reserveInfo.value.endTime = form.value.reserveDateTime[1];
+    reserveInfo.value.remark = form.value.remark;
+    // 发送预约请求
+    addReserveAPI(reserveInfo.value).then((res) => {
+        if (res.code === 1) {
+            ElMessage.success('预约成功');
+            // 关闭对话框
+            handleClose();
+        }
+    }).catch(error => {
+        console.error('预约失败:', error);
+    });
+}
+
 </script>
 
 <template>
@@ -48,10 +111,10 @@ getSpaceByIdAPI(spaceId).then((res) => {
                             </div>
                             <!-- 按钮组件 -->
                             <div>
-                                <el-button size="large" class="btn">
+                                <el-button size="large" class="detail-btn" @click="handleOpen">
                                     立即预约
                                 </el-button>
-                                <el-button size="large" class="btn">
+                                <el-button size="large" class="detail-btn">
                                     收藏
                                 </el-button>
                             </div>
@@ -62,6 +125,43 @@ getSpaceByIdAPI(spaceId).then((res) => {
             </div>
         </div>
     </div>
+
+    <!-- 预约时间选择 -->
+    <el-dialog title="预约信息" v-model="dialogVisible" width="30%" :before-close="handleClose" draggable>
+
+        <el-form ref="formRef" :model="form" label-width="auto" class="demo-ruleForm">
+            <el-form-item label="预约时间" prop="reserveDateTime" :rules="[
+                                    { required: true, message: '请选择预约时间' }]">
+                <el-date-picker v-model="form.reserveDateTime" type="datetimerange" start-placeholder="选择开始时间"
+                    end-placeholder="选择结束时间" format="YYYY-MM-DD hh:mm:ss" value-format="YYYY-MM-DD hh:mm:ss" />
+            </el-form-item>
+            <el-form-item label="备注" prop="reserveRemark">
+                <el-input v-model="form.remark" type="textarea" />
+            </el-form-item>
+        </el-form>
+
+        <!-- 用户信息 -->
+        <el-descriptions title="用户信息" column="2">
+            <el-descriptions-item label="用户名">{{ userInfo.username }}</el-descriptions-item>
+            <el-descriptions-item label="性别">{{ userInfo.sex }}</el-descriptions-item>
+            <el-descriptions-item label="手机号">{{ userInfo.phone }}</el-descriptions-item>
+            <el-descriptions-item label="邮箱"> {{ userInfo.email }}</el-descriptions-item>
+        </el-descriptions>
+        <!-- 预约信息 -->
+        <el-descriptions title="预约信息" column="2">
+            <el-descriptions-item label="场地名">{{ space.spaceName }}</el-descriptions-item>
+            <el-descriptions-item label="场地类型">{{ space.spaceType }}</el-descriptions-item>
+            <el-descriptions-item label="场地位置">{{ space.location }}</el-descriptions-item>
+            <el-descriptions-item label="预约价格"> {{ space.price }}</el-descriptions-item>
+        </el-descriptions>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="handleClose">取 消</el-button>
+                <el-button type="primary" @click="reserveSpace">确 定</el-button>
+            </span>
+        </template>
+
+    </el-dialog>
 </template>
 
 
@@ -132,7 +232,7 @@ getSpaceByIdAPI(spaceId).then((res) => {
 
 
 
-.btn {
+.detail-btn {
     margin-top: 20px;
 }
 </style>
