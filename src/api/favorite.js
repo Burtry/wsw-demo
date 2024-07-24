@@ -15,3 +15,12 @@ export function getFavoriteAPI() {
         method: 'get'
     })
 }
+
+// 删除收藏数据
+export function deleteFavoriteAPI(id) {
+    return instance({
+        url: '/user/favorite',
+        method: 'delete',
+        params: { id }
+    })
+}

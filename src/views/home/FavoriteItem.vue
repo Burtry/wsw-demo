@@ -13,21 +13,42 @@ defineProps({
     category: {
         type: String,
         default: ''
+    },
+    cancel: {
+        type: Function,
+        default: () => {
+
+        }
     }
 })
 
 </script>
 
 <template>
-    <RouterLink :to="`/${category}/${id}`" class="favorites-item">
-        <img :src="favorite.img[0]" alt="" />
-        <p class="name ellipsis">{{ favorite.name }}</p>
-        <p class="desc ellipsis">收藏时间{{ favorite.favoriteTime }}</p>
-        <p>查看详情>>></p>
-    </RouterLink>
+    <div class="favorites-container">
+        <RouterLink :to="`/${category}/${id}`" class="favorites-item">
+            <img :src="favorite.img[0]" alt="" />
+            <p class="name ellipsis">{{ favorite.name }}</p>
+            <p class="desc ellipsis">收藏时间{{ favorite.favoriteTime }}</p>
+        </RouterLink>
+        <!-- 取消收藏的按钮 -->
+        <div class="cancel-btn">
+            <el-button type="info" plain @click="cancel">取消收藏</el-button>
+        </div>
+    </div>
 </template>
 
 <style scoped>
+.favorites-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 310px;
+    padding: 20px 30px;
+    text-align: center;
+    transition: all .5s;
+}
+
 .favorites-item {
     display: block;
     width: 310px;
@@ -52,20 +73,9 @@ defineProps({
     .name {
         font-size: 16px;
     }
+}
 
-    .desc {
-        color: #999;
-        height: 29px;
-    }
-
-    .price {
-        color: #cf4444;
-        font-size: 20px;
-    }
-
-    .remark {
-        color: #999;
-        font-size: 14px;
-    }
+.cancel-btn {
+    margin-top: 10px;
 }
 </style>
