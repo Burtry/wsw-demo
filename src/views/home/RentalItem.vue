@@ -16,8 +16,9 @@ defineProps({
         <!-- 开始-结束时间 -->
         <p class="desc ellipsis">开始时间:{{ rental.startTime }}</p>
         <p class="desc ellipsis">结束时间:{{ rental.endTime }}</p>
-        <p class="price">{{ rental.rentalStatus === 1 ? '已租借' : rental.rentalStatus === 2 ? '进行中' : rentalStatus === 3
-        ? " 未归还" : rental.rentalStatus === 4 ? "已归还" : "已取消" }}</p>
+        <p class="price">{{ rental.rentalStatus === 1 ? '已租借' : rental.rentalStatus === 2 ? '进行中' : rental.rentalStatus
+        === 3 ?
+        "未归还" : rental.rentalStatus === 4 ? "已归还" : "已取消" }}</p>
         <p class="remark">备注: {{ rental.remark }}</p>
     </RouterLink>
 </template>

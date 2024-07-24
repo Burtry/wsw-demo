@@ -37,3 +37,13 @@ export function getUserRentalAPI(radioStatus) {
         params: { radioStatus }
     })
 }
+
+//用户端添加租借记录
+export function addUserRentalAPI(params) {
+
+    return instance({
+        url: '/user/rentals',
+        method: 'post',
+        data: params
+    })
+}

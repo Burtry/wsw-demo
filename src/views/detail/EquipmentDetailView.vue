@@ -2,6 +2,14 @@
 import { ref } from 'vue'
 import { getEquipmentByIdAPI } from "@/api/equipment.js";
 import { useRoute } from "vue-router"
+import { useUserStore } from "@/stores/user.js";
+import { ElMessage } from 'element-plus'
+import { addUserRentalAPI } from "@/api/rental.js";
+const userStore = useUserStore();
+
+const userInfo = ref({})
+userInfo.value = userStore.userInfo
+
 
 const route = useRoute();
 const equipmentId = route.params.id;
@@ -20,6 +28,57 @@ getEquipmentByIdAPI(equipmentId).then((res) => {
 }).catch(error => {
     console.error('获取器材数据时出错:', error);
 });
+
+const dialogVisible = ref(false)
+const form = ref({})
+const rentalInfo = ref({
+    userId: userInfo.value.id,
+    equipmentId: equipmentId,
+    startTime: '',
+    endTime: '',
+    rentalStatus: 0,
+    remark: '',
+})
+
+const handOpen = () => {
+    dialogVisible.value = true
+}
+
+const handleClose = () => {
+    dialogVisible.value = false
+    rentalInfo.value = {
+        userId: userInfo.value.id,
+        equipmentId: equipmentId,
+        startTime: '',
+        endTime: '',
+        rentalStatus: 0,
+        remark: '',
+    }
+    //清空表单
+    form.value = {}
+
+}
+
+const rentalEquipment = () => {
+    if (!form.value.rentalDateTime) {
+        ElMessage.error('请选择租借时间')
+        return
+    }
+    rentalInfo.value.startTime = form.value.rentalDateTime[0]
+    rentalInfo.value.endTime = form.value.rentalDateTime[1]
+    rentalInfo.value.remark = form.value.remark;
+    // TODO: 调用接口
+    addUserRentalAPI(rentalInfo.value).then(res => {
+        if (res.code === 1) {
+            ElMessage.success('租借成功')
+            handleClose()
+        }
+    }).catch(error => {
+        ElMessage.error('租借失败:', error);
+        handleClose()
+    })
+}
+
 </script>
 
 <template>
@@ -47,7 +106,7 @@ getEquipmentByIdAPI(equipmentId).then((res) => {
                             </div>
                             <!-- 按钮组件 -->
                             <div>
-                                <el-button size="large" class="detail-btn">
+                                <el-button size="large" class="detail-btn" @click="handOpen">
                                     立即预约
                                 </el-button>
                                 <el-button size="large" class="detail-btn">
@@ -61,6 +120,42 @@ getEquipmentByIdAPI(equipmentId).then((res) => {
             </div>
         </div>
     </div>
+
+    <!-- 预约时间选择 -->
+    <el-dialog title="租借信息" v-model="dialogVisible" width="30%" :before-close="handleClose" draggable>
+
+        <el-form ref="formRef" :model="form" label-width="auto" class="demo-ruleForm">
+            <el-form-item label="租借时间" prop="rentalDateTime" :rules="[
+                                    { required: true, message: '请选择预约时间' }]">
+                <el-date-picker v-model="form.rentalDateTime" type="datetimerange" start-placeholder="选择开始时间"
+                    end-placeholder="选择结束时间" format="YYYY-MM-DD hh:mm:ss" value-format="YYYY-MM-DD hh:mm:ss" />
+            </el-form-item>
+            <el-form-item label="备注" prop="rentalRemark">
+                <el-input v-model="form.remark" type="textarea" />
+            </el-form-item>
+        </el-form>
+
+        <!-- 用户信息 -->
+        <el-descriptions title="用户信息" column="2">
+            <el-descriptions-item label="用户名">{{ userInfo.username }}</el-descriptions-item>
+            <el-descriptions-item label="性别">{{ userInfo.sex }}</el-descriptions-item>
+            <el-descriptions-item label="手机号">{{ userInfo.phone }}</el-descriptions-item>
+            <el-descriptions-item label="邮箱"> {{ userInfo.email }}</el-descriptions-item>
+        </el-descriptions>
+        <!-- 预约信息 -->
+        <el-descriptions title="预约信息" column="2">
+            <el-descriptions-item label="场地名">{{ equipment.equipmentName }}</el-descriptions-item>
+            <el-descriptions-item label="场地类型">{{ equipment.equipmentType }}</el-descriptions-item>
+            <el-descriptions-item label="预约价格"> {{ equipment.rentalPrice }}</el-descriptions-item>
+        </el-descriptions>
+        <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="handleClose">取 消</el-button>
+                <el-button type="primary" @click="rentalEquipment">确 定</el-button>
+            </span>
+        </template>
+
+    </el-dialog>
 </template>
 
 
