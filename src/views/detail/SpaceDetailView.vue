@@ -12,9 +12,11 @@ userInfo.value = userStore.userInfo;
 const route = useRoute();
 const spaceId = route.params.id;
 const space = ref({});
+const stringImg = ref("")
 getSpaceByIdAPI(spaceId).then((res) => {
 
     const data = res.data;
+    stringImg.value = data.img
     // 处理 img 字符串，将其转为数组
     if (data.img) {
         data.img = data.img.slice(1, -1).split(',').map(url => url.trim());
@@ -83,6 +85,32 @@ const reserveSpace = () => {
     });
 }
 
+import { addFavoriteAPI } from "@/api/favorite.js";
+
+const favoriteInfo = ref({})
+const addFavorite = () => {
+    //填写favoriteInfo
+    favoriteInfo.value.userId = userInfo.value.id;
+    favoriteInfo.value.favoriteType = 1;//收藏类型 1-场地 ,2-器材
+    favoriteInfo.value.name = space.value.spaceName;
+    favoriteInfo.value.img = stringImg.value;
+    favoriteInfo.value.favoriteId = space.value.id;
+    favoriteInfo.value.type = space.value.spaceType;
+    favoriteInfo.value.description = space.value.description;
+    //发送收藏请求
+    addFavoriteAPI(favoriteInfo.value).then((res) => {
+        if (res.code === 0) {
+            ElMessage.warning('已收藏');
+        }
+        if (res.code === 1) {
+            ElMessage.success('收藏成功');
+        }
+    }).catch(error => {
+        ElMessage.error('收藏失败');
+        console.log(error);
+    });
+}
+
 </script>
 
 <template>
@@ -114,7 +142,7 @@ const reserveSpace = () => {
                                 <el-button size="large" class="detail-btn" @click="handleOpen">
                                     立即预约
                                 </el-button>
-                                <el-button size="large" class="detail-btn">
+                                <el-button size="large" class="detail-btn" @click="addFavorite">
                                     收藏
                                 </el-button>
                             </div>
