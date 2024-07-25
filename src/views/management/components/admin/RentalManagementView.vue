@@ -12,11 +12,14 @@
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
 
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="250">
             <template #default="{ row }">
+                <el-button link type="primary" size="large" @click="updateStatus = true; rowId = row.id">
+                    修改状态
+                </el-button>
                 <el-button link type="primary" size="large"
                     @click="updateReserve = true; rowInfo.value = row; updateInfo.id = row.id">
-                    修改
+                    修改信息
                 </el-button>
                 <el-button link type="primary" size="large" @click="deleteRental = true; rowInfo.value = row;">
                     删除
@@ -44,6 +47,29 @@
             </div>
         </template>
     </el-dialog>
+    <!-- 修改状态 -->
+    <el-dialog v-model="updateStatus" title="修改租借状态" width="500" :before-close="updateStatusClose">
+        <el-form :model="updateStatusInfo" class="demo-form-inline">
+            <el-form-item label="租借状态">
+                <el-select v-model="updateStatusInfo.rentalStatus">
+                    <el-option label="已取消" value="0" />
+                    <el-option label="已租借" value="1" />
+                    <el-option label="进行中" value="2" />
+                    <el-option label="未归还" value="3" />
+                    <el-option label="已归还" value="4" />
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="updateStatusClose">取消</el-button>
+                <el-button type="primary" @click="doUpdateStatus">
+                    确定
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
+
 
     <!-- 修改预约信息 -->
     <el-dialog v-model="updateReserve" title="修改租借信息" width="500" :before-close="updateDialogClose">
@@ -69,7 +95,10 @@
             <el-form-item label="租借状态">
                 <el-select v-model="updateInfo.rentalStatus">
                     <el-option label="已取消" value="0" />
-                    <el-option label="已确认" value="1" />
+                    <el-option label="已租借" value="1" />
+                    <el-option label="进行中" value="2" />
+                    <el-option label="未归还" value="3" />
+                    <el-option label="已归还" value="4" />
                 </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="remark">
@@ -93,13 +122,39 @@
 
 <script setup>
 import { ref } from "vue";
-import { getRentalPageAPI, deleteRentalByIdAPI, updateRentalAPI } from "@/api/rental.js";
+import { getRentalPageAPI, deleteRentalByIdAPI, updateRentalAPI, updateRentalStatusAPI } from "@/api/rental.js";
 import { ElMessage } from "element-plus";
 // import dayjs from "dayjs";
 const rentalList = ref([]);
 const deleteRental = ref(false)
 const updateReserve = ref(false)
 const rowInfo = ref({})
+const updateStatus = ref(false)
+const rowId = ref({})
+const updateStatusInfo = ref({
+    rentalStatus: ""
+})
+
+const doUpdateStatus = () => {
+    console.log(updateStatusInfo.value.rentalStatus);
+    console.log(rowId.value);
+    updateRentalStatusAPI(rowId.value, updateStatusInfo.value.rentalStatus).then(res => {
+        if (res.code === 1) {
+            ElMessage({
+                message: "修改成功",
+                type: "success"
+            })
+            getRentalPage()
+        }
+        else {
+            ElMessage({
+                message: "修改失败",
+                type: "error"
+            })
+        }
+        updateStatus.value = false
+    })
+}
 
 const updateInfo = ref({})
 const pageData = ref({
@@ -115,13 +170,17 @@ const updateDialogClose = () => {
     updateInfo.value = {}
 }
 
+const updateStatusClose = () => {
+    updateStatus.value = false
+}
+
 
 const getRentalPage = () => {
     getRentalPageAPI(pageData.value).then(res => {
         rentalList.value = res.data.list.map(item => ({
             ...item,
-            //预约状态 3已完成/2进行中/1已预约/0已取消
-            rentalStatus: item.rentalStatus === 1 ? "已预约" : item.rentalStatus === 2 ? "进行中" : item.rentalStatus === 3 ? "已完成" : "已取消"
+            //租借状态4已归还/3未归还/2进行中/1已租借/0已取消
+            rentalStatus: item.rentalStatus === 1 ? "已租借" : item.rentalStatus === 2 ? "进行中" : item.rentalStatus === 3 ? "未归还" : item.rentalStatus === 4 ? "已归还" : "已取消"
         }))
         pageData.value.total = res.data.total;
     })

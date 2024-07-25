@@ -26,6 +26,15 @@ export function updateReserveAPI(params) {
     })
 }
 
+//更新预约状态
+export function updateReservationStatusAPI(id, status) {
+    return instance({
+        url: `/reservations/status/${id}`,
+        method: 'put',
+        params: { status }
+    })
+}
+
 //用户端text
 export function getReserveTextAPI(radioStatus) {
     return instance({

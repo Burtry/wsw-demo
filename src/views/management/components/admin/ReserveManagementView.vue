@@ -12,11 +12,14 @@
         <el-table-column prop="createTime" label="创建时间" width="180" />
         <el-table-column prop="updateTime" label="更新时间" width="180" />
 
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" width="250">
             <template #default="{ row }">
+                <el-button link type="primary" size="large" @click="updateStatus = true; rowId = row.id">
+                    修改状态
+                </el-button>
                 <el-button link type="primary" size="large"
                     @click="updateReserve = true; rowInfo.value = row; updateInfo.id = row.id">
-                    修改
+                    修改信息
                 </el-button>
                 <el-button link type="primary" size="large" @click="deleteReserve = true; rowInfo.value = row;">
                     删除
@@ -39,6 +42,28 @@
             <div class="dialog-footer">
                 <el-button @click="deleteReserve = false">取消</el-button>
                 <el-button type="primary" @click="doDeleteReserve(rowInfo.value.id)">
+                    确定
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
+
+    <!-- 修改状态 -->
+    <el-dialog v-model="updateStatus" title="修改租借状态" width="500" :before-close="updateStatusClose">
+        <el-form :model="updateStatusInfo" class="demo-form-inline">
+            <el-form-item label="租借状态">
+                <el-select v-model="updateStatusInfo.reservationStatus">
+                    <el-option label="已取消" value="0" />
+                    <el-option label="已预约" value="1" />
+                    <el-option label="进行中" value="2" />
+                    <el-option label="已完成" value="3" />
+                </el-select>
+            </el-form-item>
+        </el-form>
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="updateStatusClose">取消</el-button>
+                <el-button type="primary" @click="doUpdateStatus">
                     确定
                 </el-button>
             </div>
@@ -69,7 +94,9 @@
             <el-form-item label="预约状态">
                 <el-select v-model="updateInfo.reservationStatus">
                     <el-option label="已取消" value="0" />
-                    <el-option label="已确认" value="1" />
+                    <el-option label="已预约" value="1" />
+                    <el-option label="进行中" value="2" />
+                    <el-option label="已完成" value="3" />
                 </el-select>
             </el-form-item>
             <el-form-item label="备注" prop="description">
@@ -93,13 +120,43 @@
 
 <script setup>
 import { ref } from "vue";
-import { getReserveListOfPageAPI, deleteReserveByIdAPI, updateReserveAPI } from "@/api/reserve.js";
+import { getReserveListOfPageAPI, deleteReserveByIdAPI, updateReserveAPI, updateReservationStatusAPI } from "@/api/reserve.js";
 import { ElMessage } from "element-plus";
 // import dayjs from "dayjs";
 const reserveList = ref([]);
 const deleteReserve = ref(false)
 const updateReserve = ref(false)
 const rowInfo = ref({})
+const rowId = ref({})
+const updateStatus = ref(false)
+const updateStatusInfo = ref({
+    reservationStatus: ""
+})
+
+const updateStatusClose = () => {
+    updateStatus.value = false
+    updateStatusInfo.value = {}
+}
+
+const doUpdateStatus = () => {
+    updateReservationStatusAPI(rowId.value, updateStatusInfo.value.reservationStatus).then(res => {
+        if (res.code === 1) {
+            ElMessage({
+                message: "修改成功",
+                type: "success"
+            })
+            getReserveListOfPage()
+
+        } else {
+            ElMessage({
+                message: "修改失败",
+                type: "error"
+            })
+        }
+        updateStatus.value = false
+    })
+
+}
 
 const updateInfo = ref({})
 const pageData = ref({

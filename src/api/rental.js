@@ -29,6 +29,15 @@ export function updateRentalAPI(params) {
 
 }
 
+//修改租借状态
+export function updateRentalStatusAPI(id, status) {
+    return instance({
+        url: `/rentals/status/${id}`,
+        method: 'put',
+        params: { status }
+    })
+}
+
 //用户端获取租借信息
 export function getUserRentalAPI(radioStatus) {
     return instance({
@@ -47,3 +56,4 @@ export function addUserRentalAPI(params) {
         data: params
     })
 }
+
