@@ -69,11 +69,23 @@ const rentalEquipment = () => {
     rentalInfo.value.startTime = form.value.rentalDateTime[0]
     rentalInfo.value.endTime = form.value.rentalDateTime[1]
     rentalInfo.value.remark = form.value.remark;
-    // TODO: 调用接口
     addUserRentalAPI(rentalInfo.value).then(res => {
         if (res.code === 1) {
             ElMessage.success('租借成功')
             handleClose()
+        } else {
+            if (res.data.code === -1) {
+                // 预约时间冲突 + 开始时间 - 结束时间
+                ElMessage({
+                    message: "租借时间冲突, 已有租借：" + res.data.startTime + " - " + res.data.endTime,
+                    type: "error",
+                    duration: 5000, // 显示时间（毫秒），此处为 5 秒
+                    showClose: true, // 显示关闭按钮
+                });
+                // 关闭对话框
+                handleClose();
+            }
+            handleClose();
         }
     }).catch(error => {
         ElMessage.error('租借失败:', error);
@@ -132,6 +144,11 @@ const addFavorite = () => {
                             <div class="price">
                                 租借价格: <span>{{ equipment.rentalPrice }}</span>
                             </div>
+                            <p class="status">
+                                <!-- TODO显示使用时间 -->
+                                当前器材状态：<span v-if="equipment.status === '1'" class="use">已被租借</span>
+                                <span v-else class="free">未使用</span>
+                            </p>
                             <!-- 按钮组件 -->
                             <div>
                                 <el-button size="large" class="detail-btn" @click="handOpen">
@@ -175,6 +192,13 @@ const addFavorite = () => {
             <el-descriptions-item label="场地名">{{ equipment.equipmentName }}</el-descriptions-item>
             <el-descriptions-item label="场地类型">{{ equipment.equipmentType }}</el-descriptions-item>
             <el-descriptions-item label="预约价格"> {{ equipment.rentalPrice }}</el-descriptions-item>
+        </el-descriptions>
+        <!-- 收款码 -->
+        <el-descriptions title="收款码" column="2">
+
+            <el-descriptions-item label="">
+                <img src="@/assets/images/erweima.jpg" alt="" style="width: 200px; height: 200px;">
+            </el-descriptions-item>
         </el-descriptions>
         <template #footer>
             <span class="dialog-footer">
@@ -237,6 +261,20 @@ const addFavorite = () => {
         span {
             font-size: 24px;
             color: #f40;
+        }
+    }
+
+    .status {
+        font-size: 20px;
+        line-height: 30px;
+        padding-bottom: 10px;
+
+        .use {
+            color: #f40;
+        }
+
+        .free {
+            color: #999;
         }
     }
 }

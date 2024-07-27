@@ -17,20 +17,9 @@
                     <RouterLink :to="`/equipment`" active-class="active">器材租借</RouterLink>
                 </li>
                 <li class="home">
-                    <RouterLink :to="`/advertise`" active-class="active">公告资讯</RouterLink>
-                </li>
-                <li class="home">
-                    <RouterLink :to="`/assess`" active-class="active">用户评价</RouterLink>
-                </li>
-                <li class="home">
                     <RouterLink :to="'/management'" active-class="active">后台管理</RouterLink>
                 </li>
             </ul>
-            <div class="search">
-                <i class="iconfont icon-search"></i>
-                <input type="text" placeholder="搜一搜">
-            </div>
-
         </div>
     </header>
 </template>
@@ -96,24 +85,6 @@
         }
     }
 
-    .search {
-        width: 170px;
-        height: 32px;
-        position: relative;
-        border-bottom: 1px solid #e7e7e7;
-        line-height: 32px;
-
-        .icon-search {
-            font-size: 18px;
-            margin-left: 5px;
-        }
-
-        input {
-            width: 140px;
-            padding-left: 5px;
-            color: #666;
-        }
-    }
 
     .cart {
         width: 50px;

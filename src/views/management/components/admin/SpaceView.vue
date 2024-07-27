@@ -155,18 +155,37 @@ const loading = ref(false)
 import { uploadImageImgAPI } from "@/api/common.js";
 const uploadImage = (params) => {
     loading.value = true
+
     uploadImageImgAPI(params.file).then((res) => {
         params.file.url = res.data
+        const maxFileSize = 1024 * 1024 * 2; //2MB
+        if (params.file.size > maxFileSize) {
+            ElMessage({
+                message: "图片大小不能超过1MB",
+                type: "error",
+            });
+            loading.value = false
+            return;
+        }
+        if (res.code === 1) {
+            // 将图片地址保存到 spaceInfo 对象中
+            spaceInfo.value.img.push(res.data);
+            ElMessage({
+                message: "上传成功",
+                type: "success",
+            });
+            loading.value = false
+        } else {
+            ElMessage({
+                message: "上传失败",
+                type: "error",
+            });
+            loading.value = false
+        }
 
-        // 将图片地址保存到 spaceInfo 对象中
-        spaceInfo.value.img.push(res.data);
-        ElMessage({
-            message: "上传成功",
-            type: "success",
-        });
-        loading.value = false
+
     });
-
+    loading.value = false
 }
 
 const uploadImageUpdate = (params) => {
@@ -174,17 +193,26 @@ const uploadImageUpdate = (params) => {
     uploadImageImgAPI(params.file).then((res) => {
 
         params.file.url = res.data
-        // 将图片地址保存到 updateInfo 对象中
-        fileListUpdate.value.push({
-            url: res.data,
-            uid: params.file.uid,
-            status: 'success'
-        });
-        ElMessage({
-            message: "上传成功",
-            type: "success",
-        });
-        loading.value = false
+        if (res.code === 1) {
+            // 将图片地址保存到 updateInfo 对象中
+            fileListUpdate.value.push({
+                url: res.data,
+                uid: params.file.uid,
+                status: 'success'
+            });
+            ElMessage({
+                message: "上传成功",
+                type: "success",
+            });
+            loading.value = false
+        } else {
+            ElMessage({
+                message: "上传失败",
+                type: "error",
+            });
+            loading.value = false
+        }
+
     });
 }
 const upload = ref()

@@ -34,16 +34,6 @@ const router = createRouter({
           component: () => import('@/views/detail/EquipmentDetailView.vue')
         },
         {
-          path: 'advertise',
-          component: () => import('@/views/advertise/index.vue')
-        },
-        {
-          path: 'assess',
-          component: () => import('@/views/assess/index.vue')
-        },
-
-
-        {
           path: '/management',
           name: 'management',
           component: () => import('@/views/management/index.vue'),

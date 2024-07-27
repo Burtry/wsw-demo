@@ -13,22 +13,25 @@ const route = useRoute();
 const spaceId = route.params.id;
 const space = ref({});
 const stringImg = ref("")
-getSpaceByIdAPI(spaceId).then((res) => {
+const getSpaceById = () => {
+    getSpaceByIdAPI(spaceId).then((res) => {
 
-    const data = res.data;
-    stringImg.value = data.img
-    // 处理 img 字符串，将其转为数组
-    if (data.img) {
-        data.img = data.img.slice(1, -1).split(',').map(url => url.trim());
-    }
-    space.value = {
-        ...data,
-        price: data.price + "元/天"
-    };
-}).catch(error => {
-    console.error('获取场地数据时出错:', error);
-});
+        const data = res.data;
+        stringImg.value = data.img
+        // 处理 img 字符串，将其转为数组
+        if (data.img) {
+            data.img = data.img.slice(1, -1).split(',').map(url => url.trim());
+        }
+        space.value = {
+            ...data,
+            price: data.price + "元/天"
+        };
+    }).catch(error => {
+        console.error('获取场地数据时出错:', error);
+    });
+}
 
+getSpaceById();
 
 /**预约信息处理 */
 const dialogVisible = ref(false);
@@ -77,7 +80,21 @@ const reserveSpace = () => {
     addReserveAPI(reserveInfo.value).then((res) => {
         if (res.code === 1) {
             ElMessage.success('预约成功');
+            getSpaceById()
             // 关闭对话框
+            handleClose();
+        } else {
+            if (res.data.code === -1) {
+                // 预约时间冲突 + 开始时间 - 结束时间
+                ElMessage({
+                    message: "预约时间冲突, 已有预约：" + res.data.startTime + " - " + res.data.endTime,
+                    type: "error",
+                    duration: 5000, // 显示时间（毫秒），此处为 5 秒
+                    showClose: true, // 显示关闭按钮
+                });
+                // 关闭对话框
+                handleClose();
+            }
             handleClose();
         }
     }).catch(error => {
@@ -137,6 +154,14 @@ const addFavorite = () => {
                             <div class="price">
                                 预约价格: <span>{{ space.price }}</span>
                             </div>
+                            <p class="status">
+                                <!-- TODO显示使用时间 -->
+                                当前场地状态：<span v-if="space.status === '1'" class="use">使用中</span>
+                                <span v-else class="free">未使用</span>
+                            </p>
+
+
+
                             <!-- 按钮组件 -->
                             <div>
                                 <el-button size="large" class="detail-btn" @click="handleOpen">
@@ -182,6 +207,13 @@ const addFavorite = () => {
             <el-descriptions-item label="场地位置">{{ space.location }}</el-descriptions-item>
             <el-descriptions-item label="预约价格"> {{ space.price }}</el-descriptions-item>
         </el-descriptions>
+        <!-- 收款码 -->
+        <el-descriptions title="收款码" column="2">
+
+            <el-descriptions-item label="">
+                <img src="@/assets/images/erweima.jpg" alt="" style="width: 200px; height: 200px;">
+            </el-descriptions-item>
+        </el-descriptions>
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="handleClose">取 消</el-button>
@@ -190,6 +222,7 @@ const addFavorite = () => {
         </template>
 
     </el-dialog>
+
 </template>
 
 
@@ -243,11 +276,25 @@ const addFavorite = () => {
     .price {
         font-size: 20px;
         line-height: 30px;
-
+        padding-bottom: 10px;
 
         span {
             font-size: 24px;
             color: #f40;
+        }
+    }
+
+    .status {
+        font-size: 20px;
+        line-height: 30px;
+        padding-bottom: 10px;
+
+        .use {
+            color: #f40;
+        }
+
+        .free {
+            color: #999;
         }
     }
 }
