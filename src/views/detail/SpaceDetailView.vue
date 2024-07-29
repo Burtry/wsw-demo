@@ -4,10 +4,35 @@ import { getSpaceByIdAPI } from "@/api/space.js";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user.js";
 import { ElMessage } from 'element-plus';
+import { getReserveInfoAPI } from "@/api/reserve.js";
 
 const userStore = useUserStore();
 const userInfo = ref({})
 userInfo.value = userStore.userInfo;
+
+//当前时间
+const currentTime = new Date().toISOString();
+
+const reservationed = ref({
+    startTime: '',
+    endTime: ''
+})
+
+getReserveInfoAPI(currentTime).then((res) => {
+    if (res.data.code === -1) {
+        reservationed.value.startTime = res.data.startTime;
+        reservationed.value.endTime = res.data.endTime;
+
+    } else if (res.data.code === 1) {
+        //没有已有预约
+        return
+    }
+    else {
+        ElMessage.error('获取已有预约信息失败');
+    }
+}).catch(error => {
+    console.error('获取预约信息时出错:', error);
+});
 
 const route = useRoute();
 const spaceId = route.params.id;
@@ -156,7 +181,14 @@ const addFavorite = () => {
                             </div>
                             <p class="status">
                                 <!-- TODO显示使用时间 -->
-                                当前场地状态：<span v-if="space.status === '1'" class="use">使用中</span>
+                                当前场地状态：<span v-if="space.status === '1'" class="use">使用中
+                                    <div>
+                                        开始时间: {{ reservationed.startTime }}
+                                    </div>
+                                    <div>
+                                        结束时间: {{ reservationed.endTime }}
+                                    </div>
+                                </span>
                                 <span v-else class="free">未使用</span>
                             </p>
 

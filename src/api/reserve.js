@@ -50,3 +50,12 @@ export function addReserveAPI(params) {
 
     )
 }
+
+//根据当前时间获取已有预约信息
+export function getReserveInfoAPI(dateTime) {
+    return instance({
+        url: '/user/reservation/date',
+        method: 'get',
+        params: { localDateTime: dateTime }
+    })
+}

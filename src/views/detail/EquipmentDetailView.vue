@@ -152,7 +152,7 @@ const addFavorite = () => {
                             <!-- 按钮组件 -->
                             <div>
                                 <el-button size="large" class="detail-btn" @click="handOpen">
-                                    立即预约
+                                    立即租借
                                 </el-button>
                                 <el-button size="large" class="detail-btn" @click="addFavorite">
                                     收藏
