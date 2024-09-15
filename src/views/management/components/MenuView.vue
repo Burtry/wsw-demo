@@ -44,12 +44,6 @@
             </el-icon>
             <span>用户管理</span>
         </el-menu-item>
-        <el-menu-item index="/management/system">
-            <el-icon>
-                <setting />
-            </el-icon>
-            <span>数据总览</span>
-        </el-menu-item>
         <div class="el-divider-admin"></div>
     </el-menu>
 

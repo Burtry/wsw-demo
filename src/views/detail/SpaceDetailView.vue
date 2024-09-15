@@ -181,7 +181,7 @@ const addFavorite = () => {
                             </div>
                             <p class="status">
                                 <!-- TODO显示使用时间 -->
-                                当前场地状态：<span v-if="space.status === '1'" class="use">使用中
+                                当前场地状态：<span v-if="reservationed.startTime && reservationed.endTime" class="use">使用中
                                     <div>
                                         开始时间: {{ reservationed.startTime }}
                                     </div>
@@ -216,9 +216,9 @@ const addFavorite = () => {
 
         <el-form ref="formRef" :model="form" label-width="auto" class="demo-ruleForm">
             <el-form-item label="预约时间" prop="reserveDateTime" :rules="[
-                                    { required: true, message: '请选择预约时间' }]">
+                { required: true, message: '请选择预约时间' }]">
                 <el-date-picker v-model="form.reserveDateTime" type="datetimerange" start-placeholder="选择开始时间"
-                    end-placeholder="选择结束时间" format="YYYY-MM-DD hh:mm:ss" value-format="YYYY-MM-DD hh:mm:ss" />
+                    end-placeholder="选择结束时间" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" />
             </el-form-item>
             <el-form-item label="备注" prop="reserveRemark">
                 <el-input v-model="form.remark" type="textarea" />
