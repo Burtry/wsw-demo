@@ -15,7 +15,8 @@ defineProps({
 
 <template>
     <RouterLink :to="`/equipment/${id}`" class="goods-item">
-        <img :src="equipments.img[0]" alt="" />
+        <img :src="equipments.img" alt="" />
+        <!-- <img :src="equipments.img[0]" alt="" />    -->
         <p class="name ellipsis">{{ equipments.equipmentName }}</p>
         <p class="price">{{ equipments.rentalPrice }}</p>
         <p>查看详情>>></p>

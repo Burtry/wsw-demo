@@ -1,4 +1,26 @@
 <script setup>
+import { Search } from '@element-plus/icons-vue'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const searchInput = ref("")
+// 定义搜索按钮的点击事件处理函数
+const handleSearch = async () => {
+    if (!searchInput.value.trim()) {
+        return; // 如果输入为空，则不发起搜索请求
+    }
+    // 调用搜索 API
+    try {
+        // 路由跳转，传递查询参数
+        router.push({ path: '/search', query: { searchInput: searchInput.value } });
+
+        // 在请求完成后清空搜索框
+        searchInput.value = "";
+    } catch (error) {
+        console.error("搜索失败", error);
+    }
+}
 
 
 </script>
@@ -20,7 +42,15 @@
                     <RouterLink :to="'/management'" active-class="active">后台管理</RouterLink>
                 </li>
             </ul>
+            <el-input v-model="searchInput" @keydown.enter="handleSearch" style="width: 240px" placeholder="请输入" />
+            <el-button @click="handleSearch">
+                <el-icon style="vertical-align: middle">
+                    <Search />
+                </el-icon>
+                <span style="vertical-align: middle"> 搜索 </span>
+            </el-button>
         </div>
+
     </header>
 </template>
 

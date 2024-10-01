@@ -34,6 +34,10 @@ const router = createRouter({
           component: () => import('@/views/detail/EquipmentDetailView.vue')
         },
         {
+          path: '/search',
+          component: () => import('@/views/home/components/SearchView.vue')
+        },
+        {
           path: '/management',
           name: 'management',
           component: () => import('@/views/management/index.vue'),
