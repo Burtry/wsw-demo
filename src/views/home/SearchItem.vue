@@ -19,14 +19,14 @@ defineProps({
     <RouterLink :to="`/${type}/${id}`" class="goods-item">
         <img :src="searchList.url" alt="" />
         <!-- <img :src="equipments.img[0]" alt="" />    -->
-        <p class="name ellipsis">{{ searchList.name }}</p>
+        <p class="name ellipsis" v-html="searchList.name"></p>
         <p class="price">{{ searchList.price }}</p>
         <p>查看详情>>></p>
     </RouterLink>
 </template>
 
 
-<style scoped lang="scss">
+<style lang="scss">
 .goods-item {
     display: block;
     width: 250px;
@@ -46,10 +46,18 @@ defineProps({
 
     p {
         padding-top: 10px;
+        letter-spacing: 2px;
+        /* 将字符间距设置为2px */
     }
 
     .name {
         font-size: 16px;
+
+        em {
+            color: red;
+            font-style: normal;
+            /* 取消 <em> 标签的斜体效果 */
+        }
     }
 
     .location {
