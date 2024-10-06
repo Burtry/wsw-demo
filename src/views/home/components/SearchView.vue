@@ -1,7 +1,7 @@
 <script setup>
 import { searchAPI } from "@/api/search";
 import { ref, onMounted, watch } from "vue";
-import EquipmentItem from "../EquipmentItem.vue";
+import SearchItem from "../SearchItem.vue";
 
 import { useRoute } from "vue-router";
 const route = useRoute();
@@ -11,8 +11,17 @@ const searchResult = ref({})
 const searchInput = ref(route.query.searchInput || '');
 
 async function handleSearch() {
-    searchResult.value = await searchAPI(searchInput.value); // 发送 API 请求
-    console.log(searchResult.value);
+    const result = await searchAPI(searchInput.value); // 发送 API 请求
+    //url为[url]，转换成url
+
+    searchResult.value = result.data.map(item => {
+        return {
+            ...item,
+            url: item.url ? item.url.slice(1, -1).split(',') : [],
+            price: item.price + "元/天",
+            id: item.type === "space" ? item.id - 10000 : item.id - 20000
+        }
+    });
 }
 
 onMounted(() => {
@@ -25,48 +34,6 @@ watch(() => route.query.searchInput, (newSearchInput) => {
     handleSearch();
 });
 
-const equipmentList = ref([
-    {
-        id: 1,
-        equipmentName: "设备1",
-        description: "这是设备1的描述",
-        rentalPrice: 100,
-        image: "https://example.com/image1.jpg",
-        location: "地点1",
-        status: "可用",
-        type: "类型1",
-        capacity: 10,
-        available: true,
-        favorite: false,
-    },
-    {
-        id: 2,
-        equipmentName: "设备2",
-        description: "这是设备2的描述",
-        rentalPrice: 200,
-        image: "https://example.com/image2.jpg",
-        location: "地点2",
-        status: "不可用",
-        type: "类型2",
-        capacity: 20,
-        available: false,
-        favorite: false,
-    },
-    {
-        id: 2,
-        equipmentName: "设备2",
-        description: "这是设备2的描述",
-        rentalPrice: 200,
-        image: "https://example.com/image2.jpg",
-        location: "地点2",
-        status: "不可用",
-        type: "类型2",
-        capacity: 20,
-        available: false,
-        favorite: false,
-    }
-
-])
 
 </script>
 
@@ -74,9 +41,9 @@ const equipmentList = ref([
 <template>
     <div style="height: 600px;">
         <div class="body">
-            <EquipmentItem v-for="item in equipmentList" :key="item.id" :equipments="item" :id="item.id"
+            <SearchItem v-for="item in searchResult" :key="item.id" :searchList="item" :id="item.id" :type="item.type"
                 class="equipment-item">
-            </EquipmentItem>
+            </SearchItem>
         </div>
     </div>
 
