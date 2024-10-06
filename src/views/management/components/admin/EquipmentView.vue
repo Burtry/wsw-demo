@@ -8,7 +8,7 @@
 
 
     <el-table :data="equipmentList" stripe style="width: 100%" size="large">
-        <el-table-column prop="id" label="ID" width="100" />
+        <el-table-column prop="id" label="ID" width="200" />
         <el-table-column prop="equipmentName" label="器材名称" width="180" />
         <el-table-column prop="equipmentType" label="器材类型" width="180" />
         <el-table-column prop="rentalPrice" label="租借价格" width="100" align="center" />

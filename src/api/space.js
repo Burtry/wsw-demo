@@ -15,7 +15,7 @@ export function getSpaceAPI(params) {
 export function getAllSpaceAPI() {
     return instance(
         {
-            url: "/space/all",
+            url: "/space/spaceAll",
             method: "get"
         }
     )

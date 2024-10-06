@@ -6,7 +6,7 @@
         新增场地
     </el-button>
     <el-table :data="tableData" stripe style="width: 100%" size="large">
-        <el-table-column prop="id" label="ID" width="100" />
+        <el-table-column prop="id" label="ID" width="200" />
         <el-table-column prop="spaceName" label="场地名称" width="180" />
         <el-table-column prop="spaceType" label="场地类型" width="180" />
         <el-table-column prop="status" label="场地状态" width="180" />

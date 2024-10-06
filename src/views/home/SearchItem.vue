@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-    <RouterLink :to="`/${type}/${id}`" class="goods-item">
+    <RouterLink :to="`/${type}/${id}`" class="search-item">
         <img :src="searchList.url" alt="" />
         <!-- <img :src="equipments.img[0]" alt="" />    -->
         <p class="name ellipsis" v-html="searchList.name"></p>
@@ -27,7 +27,7 @@ defineProps({
 
 
 <style lang="scss">
-.goods-item {
+.search-item {
     display: block;
     width: 250px;
     padding: 20px 30px;
@@ -46,8 +46,6 @@ defineProps({
 
     p {
         padding-top: 10px;
-        letter-spacing: 2px;
-        /* 将字符间距设置为2px */
     }
 
     .name {

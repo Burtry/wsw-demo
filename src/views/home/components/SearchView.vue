@@ -18,8 +18,7 @@ async function handleSearch() {
         return {
             ...item,
             url: item.url ? item.url.slice(1, -1).split(',') : [],
-            price: item.price + "元/天",
-            id: item.type === "space" ? item.id - 10000 : item.id - 20000
+            price: item.price + "元/天"
         }
     });
 }
