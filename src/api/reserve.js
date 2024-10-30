@@ -52,10 +52,23 @@ export function addReserveAPI(params) {
 }
 
 //根据当前时间获取已有预约信息
-export function getReserveInfoAPI(dateTime) {
+export function getReserveInfoAPI(dateTime, id) {
     return instance({
         url: '/user/reservation/date',
         method: 'get',
-        params: { localDateTime: dateTime }
+        params: {
+            localDateTime: dateTime,
+            spaceId: id
+        }
+    })
+}
+
+
+//获取该场地所有预约时间
+export function getReserveAllAPI(id) {
+    return instance({
+        url: '/user/reservation/dateAll',
+        method: 'get',
+        params: { spaceId: id }
     })
 }

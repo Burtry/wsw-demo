@@ -4,7 +4,7 @@
     <el-table :data="reserveList" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="预约ID" width="100" />
         <el-table-column prop="userId" label="用户ID" width="100" />
-        <el-table-column prop="spaceId" label="场地ID" width="100" />
+        <el-table-column prop="spaceId" label="场地ID" width="200" />
         <el-table-column prop="startTime" label="开始时间" width="180" align="center" />
         <el-table-column prop="endTime" label="结束时间" width="180" align="center" />
         <el-table-column prop="reservationStatus" label="预约状态" width="100" align="center" />

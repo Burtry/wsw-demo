@@ -4,13 +4,18 @@ import { getSpaceByIdAPI } from "@/api/space.js";
 import { useRoute } from "vue-router";
 import { useUserStore } from "@/stores/user.js";
 import { ElMessage } from 'element-plus';
-import { getReserveInfoAPI } from "@/api/reserve.js";
+import { getReserveInfoAPI, getReserveAllAPI } from "@/api/reserve.js";
 
 const userStore = useUserStore();
 const userInfo = ref({})
 userInfo.value = userStore.userInfo;
 
-//当前时间
+const route = useRoute();
+const spaceId = route.params.id;
+const space = ref({});
+const stringImg = ref("")
+
+// 当前时间
 const currentTime = new Date().toISOString();
 
 const reservationed = ref({
@@ -18,7 +23,7 @@ const reservationed = ref({
     endTime: ''
 })
 
-getReserveInfoAPI(currentTime).then((res) => {
+getReserveInfoAPI(currentTime, spaceId).then((res) => {
     if (res.data.code === -1) {
         reservationed.value.startTime = res.data.startTime;
         reservationed.value.endTime = res.data.endTime;
@@ -34,10 +39,21 @@ getReserveInfoAPI(currentTime).then((res) => {
     console.error('获取预约信息时出错:', error);
 });
 
-const route = useRoute();
-const spaceId = route.params.id;
-const space = ref({});
-const stringImg = ref("")
+const reserveAll = ref([])
+
+getReserveAllAPI(spaceId).then((res) => {
+    if (res.code === 1) {
+        reserveAll.value = res.data
+    }
+    else {
+        ElMessage.error('获取已有预约信息失败');
+    }
+}).catch(error => {
+    console.error('获取预约信息时出错:', error);
+});
+
+
+
 const getSpaceById = () => {
     getSpaceByIdAPI(spaceId).then((res) => {
 
@@ -182,15 +198,21 @@ const addFavorite = () => {
                             <p class="status">
                                 <!-- TODO显示使用时间 -->
                                 当前场地状态：<span v-if="reservationed.startTime && reservationed.endTime" class="use">使用中
-                                    <div>
-                                        开始时间: {{ reservationed.startTime }}
-                                    </div>
-                                    <div>
-                                        结束时间: {{ reservationed.endTime }}
-                                    </div>
+                                    {{ reservationed.startTime }} - {{ reservationed.endTime }}
                                 </span>
                                 <span v-else class="free">未使用</span>
+
+
                             </p>
+
+                            <!-- 已有预约 -->
+                            <p>已有预约：</p>
+                            <ul>
+                                <li v-for="(reservation, index) in reserveAll" :key="index">
+                                    预约时间: {{ reservation.startTime }} - {{ reservation.endTime }}
+                                </li>
+                            </ul>
+
 
 
 
