@@ -49,7 +49,7 @@
     </el-dialog>
 
     <!-- 修改状态 -->
-    <el-dialog v-model="updateStatus" title="修改租借状态" width="500" :before-close="updateStatusClose">
+    <el-dialog v-model="updateStatus" title="修改预约状态" width="500" :before-close="updateStatusClose">
         <el-form :model="updateStatusInfo" class="demo-form-inline">
             <el-form-item label="租借状态">
                 <el-select v-model="updateStatusInfo.reservationStatus">

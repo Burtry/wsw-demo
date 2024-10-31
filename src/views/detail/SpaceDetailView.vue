@@ -23,34 +23,41 @@ const reservationed = ref({
     endTime: ''
 })
 
-getReserveInfoAPI(currentTime, spaceId).then((res) => {
-    if (res.data.code === -1) {
-        reservationed.value.startTime = res.data.startTime;
-        reservationed.value.endTime = res.data.endTime;
+const getReserveInfo = () => {
+    getReserveInfoAPI(currentTime, spaceId).then((res) => {
+        if (res.data.code === -1) {
+            reservationed.value.startTime = res.data.startTime;
+            reservationed.value.endTime = res.data.endTime;
 
-    } else if (res.data.code === 1) {
-        //没有已有预约
-        return
-    }
-    else {
-        ElMessage.error('获取已有预约信息失败');
-    }
-}).catch(error => {
-    console.error('获取预约信息时出错:', error);
-});
+        } else if (res.data.code === 1) {
+            //没有已有预约
+            return
+        }
+        else {
+            ElMessage.error('获取已有预约信息失败');
+        }
+    }).catch(error => {
+        console.error('获取预约信息时出错:', error);
+    });
+}
+
+getReserveInfo();
 
 const reserveAll = ref([])
 
-getReserveAllAPI(spaceId).then((res) => {
-    if (res.code === 1) {
-        reserveAll.value = res.data
-    }
-    else {
-        ElMessage.error('获取已有预约信息失败');
-    }
-}).catch(error => {
-    console.error('获取预约信息时出错:', error);
-});
+const getReserveAll = () => {
+    getReserveAllAPI(spaceId).then((res) => {
+        if (res.code === 1) {
+            reserveAll.value = res.data
+        }
+        else {
+            ElMessage.error('获取已有预约信息失败');
+        }
+    }).catch(error => {
+        console.error('获取预约信息时出错:', error);
+    });
+}
+getReserveAll();
 
 
 
@@ -122,9 +129,10 @@ const reserveSpace = () => {
         if (res.code === 1) {
             ElMessage.success('预约成功');
             getSpaceById()
+            getReserveInfo();
+            getReserveAll();
             // 关闭对话框
             handleClose();
-            window.location.reload()
 
 
         } else {
