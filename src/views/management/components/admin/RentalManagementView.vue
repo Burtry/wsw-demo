@@ -3,7 +3,7 @@
 
     <el-table :data="rentalList" stripe style="width: 100%" size="large">
         <el-table-column prop="id" label="租借ID" width="100" />
-        <el-table-column prop="equipmentId" label="器材ID" width="100" />
+        <el-table-column prop="equipmentId" label="器材ID" width="200" />
         <el-table-column prop="userId" label="用户ID" width="100" />
         <el-table-column prop="startTime" label="开始时间" width="180" align="center" />
         <el-table-column prop="endTime" label="结束时间" width="180" align="center" />

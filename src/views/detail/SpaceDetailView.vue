@@ -124,6 +124,9 @@ const reserveSpace = () => {
             getSpaceById()
             // 关闭对话框
             handleClose();
+            window.location.reload()
+
+
         } else {
             if (res.data.code === -1) {
                 // 预约时间冲突 + 开始时间 - 结束时间
@@ -207,11 +210,13 @@ const addFavorite = () => {
 
                             <!-- 已有预约 -->
                             <p>已有预约：</p>
-                            <ul>
+                            <ul v-if="reserveAll.length > 0">
                                 <li v-for="(reservation, index) in reserveAll" :key="index">
                                     预约时间: {{ reservation.startTime }} - {{ reservation.endTime }}
                                 </li>
                             </ul>
+                            <p v-else>无</p>
+
 
 
 

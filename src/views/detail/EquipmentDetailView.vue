@@ -72,7 +72,25 @@ const rentalEquipment = () => {
     addUserRentalAPI(rentalInfo.value).then(res => {
         if (res.code === 1) {
             ElMessage.success('租借成功')
+
+            getEquipmentByIdAPI(equipmentId).then((res) => {
+
+                const data = res.data;
+                stringImg.value = data.img
+                // 处理 img 字符串，将其转为数组
+                if (data.img) {
+                    data.img = data.img.slice(1, -1).split(',').map(url => url.trim());
+                }
+                equipment.value = {
+                    ...data,
+                    rentalPrice: data.rentalPrice + "元/天"
+                };
+            }).catch(error => {
+                console.error('获取器材数据时出错:', error);
+            });
+
             handleClose()
+            //刷新页面
         } else {
             if (res.data.code === -1) {
                 // 预约时间冲突 + 开始时间 - 结束时间
@@ -151,7 +169,8 @@ const addFavorite = () => {
                             </p>
                             <!-- 按钮组件 -->
                             <div>
-                                <el-button size="large" class="detail-btn" @click="handOpen">
+                                <el-button size="large" class="detail-btn" :disabled="equipment.status === '1'"
+                                    @click="handOpen">
                                     立即租借
                                 </el-button>
                                 <el-button size="large" class="detail-btn" @click="addFavorite">
@@ -171,7 +190,7 @@ const addFavorite = () => {
 
         <el-form ref="formRef" :model="form" label-width="auto" class="demo-ruleForm">
             <el-form-item label="租借时间" prop="rentalDateTime" :rules="[
-                                    { required: true, message: '请选择预约时间' }]">
+                { required: true, message: '请选择预约时间' }]">
                 <el-date-picker v-model="form.rentalDateTime" type="datetimerange" start-placeholder="选择开始时间"
                     end-placeholder="选择结束时间" format="YYYY-MM-DD hh:mm:ss" value-format="YYYY-MM-DD hh:mm:ss" />
             </el-form-item>
